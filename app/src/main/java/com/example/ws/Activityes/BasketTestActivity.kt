@@ -2,7 +2,9 @@ package com.example.ws.Activityes
 
 import android.content.Context
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,6 +14,7 @@ import com.example.ws.Model.Sneakers
 import com.example.ws.R
 import com.example.ws.client
 import com.example.ws.databinding.ActivityBasketTestBinding
+import com.example.ws.databinding.DialogCustomBinding
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +45,10 @@ class BasketTestActivity : AppCompatActivity() {
         adapter.swipeToDelete(binding.rvBasket)
 
         binding.tvCount.text = listSneakers.size.toString()
+
+        binding.btnCreateOrder.setOnClickListener {
+            showCustomDialog()
+        }
 
         loadSneakers()
     }
@@ -87,5 +94,17 @@ class BasketTestActivity : AppCompatActivity() {
             updatePrice(adapter.getAllPrice())
             binding.tvCount.text = listSneakers.size.toString()
         }
+    }
+
+    private fun showCustomDialog() {
+        val dialogBinding = DialogCustomBinding.inflate(layoutInflater)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .create()
+        dialog.window?.setBackgroundDrawableResource(R.drawable.custom_et)
+        dialogBinding.dialogButtonOk.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 }
