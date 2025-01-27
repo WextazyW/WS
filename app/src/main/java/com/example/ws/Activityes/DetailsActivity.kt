@@ -56,6 +56,24 @@ class DetailsActivity : AppCompatActivity() {
             else {
                 editor.putBoolean(sneakerId.toString(), true)
                 binding.btnAddToFavorite.setImageResource(R.drawable.favorite_fill)
+                binding.btnAddToFavorite.setImageResource(R.drawable.favorite_fill)
+            }
+            editor.apply()
+        }
+
+        val sharedPreferenceBasket = getSharedPreferences("basket", Context.MODE_PRIVATE)
+        var isBasket = sharedPreferenceBasket.getBoolean(sneakerId.toString(), false)
+        binding.btnAddBasket.text = if (isBasket) "Убрать из корзины" else "В корзину"
+
+        binding.btnAddBasket.setOnClickListener {
+            val editor = sharedPreferenceBasket.edit()
+            isBasket = !isBasket
+            if (isBasket){
+                editor.putBoolean(sneakerId.toString(), true)
+                binding.btnAddBasket.text = "Убрать из корзины"
+            } else {
+                editor.putBoolean(sneakerId.toString(), false)
+                binding.btnAddBasket.text = "В корзину"
             }
             editor.apply()
         }

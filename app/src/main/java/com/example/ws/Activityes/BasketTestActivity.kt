@@ -44,7 +44,7 @@ class BasketTestActivity : AppCompatActivity() {
 
         adapter.swipeToDelete(binding.rvBasket)
 
-        binding.tvCount.text = listSneakers.size.toString()
+        binding.tvCount.text = listSneakers.size.toString() + " товара"
 
         binding.btnCreateOrder.setOnClickListener {
             showCustomDialog()
@@ -59,14 +59,14 @@ class BasketTestActivity : AppCompatActivity() {
         binding.tvDostavka.text = dostavka.toString()
         val itogoPrice = totalPrice + dostavka
         binding.tvItogo.text = String.format("%.2f", itogoPrice)
-        binding.tvCount.text = listSneakers.size.toString()
+        binding.tvCount.text = listSneakers.size.toString() + " товара"
     }
 
     private fun loadSneakers(){
         CoroutineScope(Dispatchers.IO).launch {
             val allSneakers = getAllSneakers()
             setBasketSneakers(allSneakers)
-            binding.tvCount.text = listSneakers.size.toString()
+            binding.tvCount.text = listSneakers.size.toString() + " товара"
         }
     }
 
@@ -92,7 +92,7 @@ class BasketTestActivity : AppCompatActivity() {
         withContext(Dispatchers.Main){
             adapter.notifyDataSetChanged()
             updatePrice(adapter.getAllPrice())
-            binding.tvCount.text = listSneakers.size.toString()
+            binding.tvCount.text = listSneakers.size.toString() + " товара"
         }
     }
 
