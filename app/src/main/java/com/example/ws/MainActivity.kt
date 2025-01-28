@@ -28,6 +28,9 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //session 1
+
         replaceFragment(HomeFragment())
         binding.btnGoBasket.setOnClickListener {
             startActivity(Intent(this, BasketTestActivity::class.java))
