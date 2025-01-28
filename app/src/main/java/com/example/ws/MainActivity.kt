@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //session 1
+        //session 1 change
 
         replaceFragment(HomeFragment())
         binding.btnGoBasket.setOnClickListener {
