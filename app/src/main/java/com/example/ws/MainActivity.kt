@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //session 1 change
+        //session 2
 
         replaceFragment(HomeFragment())
         binding.btnGoBasket.setOnClickListener {
