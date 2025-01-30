@@ -1,6 +1,7 @@
 package com.example.ws.Activityes
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
+import com.example.ws.MainActivity
 import com.example.ws.R
 import com.example.ws.databinding.ActivityDetailsBinding
 
@@ -56,7 +58,6 @@ class DetailsActivity : AppCompatActivity() {
             else {
                 editor.putBoolean(sneakerId.toString(), true)
                 binding.btnAddToFavorite.setImageResource(R.drawable.favorite_fill)
-                binding.btnAddToFavorite.setImageResource(R.drawable.favorite_fill)
             }
             editor.apply()
         }
@@ -77,5 +78,10 @@ class DetailsActivity : AppCompatActivity() {
             }
             editor.apply()
         }
+    }
+
+    override fun onBackPressed() {
+        finish()
+        super.onBackPressed()
     }
 }

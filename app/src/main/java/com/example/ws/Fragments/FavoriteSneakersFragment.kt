@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.ws.Adapters.AllSneakersAdapter
 import com.example.ws.Model.Sneakers
@@ -40,7 +41,7 @@ class FavoriteSneakersFragment : Fragment() {
     }
 
     private fun loadSneakers(){
-        CoroutineScope(Dispatchers.IO).launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             val allSneakers = getAllSneakers()
             getFavoritesSneakers(allSneakers)
         }

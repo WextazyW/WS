@@ -43,7 +43,6 @@
         android:layout_height="wrap_content"
         app:itemActiveIndicatorStyle="@style/TextAppearance.AppCompat"
         app:itemIconTint="@drawable/bottom_nav_selector"
-        app:itemTextColor="@drawable/bottom_nav_selector"
         app:itemRippleColor="@color/white"
         app:labelVisibilityMode="labeled"
         app:itemPaddingTop="24dp"

@@ -1,6 +1,7 @@
 package com.example.ws.Adapters
 
 import android.annotation.SuppressLint
+import android.content.ClipData.Item
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ws.Model.Sneakers
+import com.example.ws.Singleton.UserSession
 import com.example.ws.databinding.ItemSneakerBasketBinding
 
 class BasketTestAdapter(

@@ -101,6 +101,5 @@ class SneakerAdapter(
     fun updateList(newList: List<Sneakers>){
         limitedList = if (newList.size > 2) newList.subList(0, 2) else newList
         notifyDataSetChanged()
-
     }
 }

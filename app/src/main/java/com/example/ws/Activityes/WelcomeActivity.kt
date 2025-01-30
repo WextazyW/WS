@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ws.MainActivity
 import com.example.ws.R
+import com.example.ws.Singleton.UserSession
 import com.example.ws.databinding.ActivityWelcomeBinding
 
 class WelcomeActivity : AppCompatActivity() {
@@ -25,6 +26,8 @@ class WelcomeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        UserSession.userId = 7
 
         binding.viewSwitcher2.visibility = View.GONE
 

@@ -1,6 +1,7 @@
 package com.example.ws.Activityes
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.enableEdgeToEdge
@@ -104,6 +105,7 @@ class BasketTestActivity : AppCompatActivity() {
         dialog.window?.setBackgroundDrawableResource(R.drawable.custom_et)
         dialogBinding.dialogButtonOk.setOnClickListener {
             dialog.dismiss()
+            startActivity(Intent(this@BasketTestActivity, OrderActivity::class.java))
         }
         dialog.show()
     }

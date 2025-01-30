@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.example.ws.Model.Users
 import com.example.ws.R
+import com.example.ws.Singleton.UserSession
 import com.example.ws.client
 import com.example.ws.databinding.FragmentProfileBinding
 import io.github.jan.supabase.postgrest.postgrest
@@ -26,7 +27,7 @@ class ProfileFragment : Fragment() {
     ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        loadInformation("f2cd6343-e0d7-40b9-892c-929108145adc")
+        loadInformation(UserSession?.userId!!)
 
         binding.Save.setOnClickListener {
             editProfile()
@@ -35,12 +36,12 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    private fun loadInformation(uuid : String) {
+    private fun loadInformation(id : Int) {
         CoroutineScope(Dispatchers.IO).launch {
             val users : List<Users> = client.postgrest["Users"]
                 .select {
                     filter {
-                        eq("id_uuid", uuid)
+                        eq("id", id)
                     }
                 }.decodeAs()
             withContext(Dispatchers.Main){
@@ -60,7 +61,7 @@ class ProfileFragment : Fragment() {
                 val userData = Users(
                     Name = binding.etName.text.toString(),
                     Email = binding.etEmail.text.toString(),
-                    id = 7,
+                    id = UserSession.userId,
                     id_uuid = "f2cd6343-e0d7-40b9-892c-929108145adc"
                 )
                 client.postgrest["Users"]
