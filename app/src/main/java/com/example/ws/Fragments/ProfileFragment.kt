@@ -27,10 +27,20 @@ class ProfileFragment : Fragment() {
     ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        loadInformation(UserSession?.userId!!)
+        try {
+            loadInformation(UserSession.userId!!)
+        } catch (e:Exception){
+            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
+        }
+
+        binding.etName.isFocusable = false
+        binding.etName.isEnabled = false
+
+        binding.etEmail.isFocusable = false
+        binding.etEmail.isEnabled = false
 
         binding.Save.setOnClickListener {
-            editProfile()
+            createProfile()
         }
 
         return binding.root
@@ -38,38 +48,40 @@ class ProfileFragment : Fragment() {
 
     private fun loadInformation(id : Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            val users : List<Users> = client.postgrest["Users"]
-                .select {
-                    filter {
-                        eq("id", id)
+            try {
+                val users : List<Users> = client.postgrest["Users"]
+                    .select {
+                        filter {
+                            eq("id", id)
+                        }
+                    }.decodeAs()
+                withContext(Dispatchers.Main){
+                    if (users.isNotEmpty()){
+                        binding.etName.setText(users[0].Name)
+                        binding.etEmail.setText(users[0].Email)
+                    } else{
+                        binding.etName.setText("Пользователь не найден")
                     }
-                }.decodeAs()
-            withContext(Dispatchers.Main){
-                if (users.isNotEmpty()){
-                    binding.etName.setText(users[0].Name)
-                    binding.etEmail.setText(users[0].Email)
-                } else{
-                    binding.etName.setText("Пользователь не найден")
+                }
+            } catch (e : Exception){
+                withContext(Dispatchers.Main){
+                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    private fun editProfile(){
+    private fun createProfile(){
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val userData = Users(
                     Name = binding.etName.text.toString(),
                     Email = binding.etEmail.text.toString(),
-                    id = UserSession.userId,
                     id_uuid = "f2cd6343-e0d7-40b9-892c-929108145adc"
                 )
                 client.postgrest["Users"]
-                    .update(userData){
-                        filter {
-                            eq("id", userData.id.toString())
-                        }
-                    }
+                    .insert(userData)
+                    .decodeAs<List<Users>>()
             } catch (e:Exception){
                 withContext(Dispatchers.Main){
                     Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()

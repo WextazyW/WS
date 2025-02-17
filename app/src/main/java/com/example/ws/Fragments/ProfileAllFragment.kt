@@ -24,7 +24,6 @@ class ProfileAllFragment : Fragment() {
         }
 
         binding.navView.setNavigationItemSelectedListener {
-            binding.drawerLayout.closeDrawers()
             when(it.itemId){
                 R.id.nav_profile -> replaceFragment(ProfileFragment())
                 R.id.nav_favorite -> replaceFragment(FavoriteSneakersFragment())
@@ -40,7 +39,6 @@ class ProfileAllFragment : Fragment() {
         val fragmentManager = requireActivity().supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frame_layout2, fragment)
-        fragmentTransaction.addToBackStack(null)
         fragmentTransaction.commit()
     }
 

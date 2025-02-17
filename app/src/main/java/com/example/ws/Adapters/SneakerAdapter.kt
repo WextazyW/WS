@@ -32,8 +32,8 @@ class SneakerAdapter(
 
             binding.btnAddFavorite.setOnClickListener {
                 val editor = sharedPreferenceFavorite.edit()
+                isFavorite = !isFavorite
                 if (isFavorite){
-                    isFavorite = !isFavorite
                     editor.putBoolean(sneaker.id.toString(), false)
                     binding.btnAddFavorite.setImageResource(R.drawable.favorite)
                 } else {
