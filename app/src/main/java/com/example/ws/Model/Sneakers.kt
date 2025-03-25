@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Sneakers(
     val id : Int = 0,
-    val Name : String,
-    val Price : Float,
-    val Description : String
+    val name : String,
+    val price : Float,
+    val description : String = "",
+    val type : String = "Men's shoes"
 )

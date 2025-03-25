@@ -13,18 +13,19 @@ import com.example.ws.databinding.ItemSneakerBasketBinding
 class BasketAdapter(
     private val listSneakers: MutableList<Sneakers>,
     private val onPriceChange: (Double) -> Unit,
-    private val context : Context
+    context : Context
 ) : RecyclerView.Adapter<BasketAdapter.BasketViewHolder>() {
 
     private val quantities = mutableMapOf<Long, Int>()
     private val sharedPreferencesBasket = context.getSharedPreferences("basket", Context.MODE_PRIVATE)
 
     inner class BasketViewHolder(private var binding : ItemSneakerBasketBinding) : RecyclerView.ViewHolder(binding.root){
+        @SuppressLint("SetTextI18n")
         fun bind(sneaker : Sneakers){
-            binding.productName.text = sneaker.Name
-            binding.productPrice.text = sneaker.Price.toString()
+            binding.productName.text = sneaker.name
+            binding.productPrice.text = sneaker.price.toString()
             Glide.with(binding.root.context)
-                .load("https://fnuichoiatdyljxuvfkq.supabase.co/storage/v1/object/sign/SneakersPhoto/nike-zoom-winflo-3-831561-001-mens-running-shoes-11550187236tiyyje6l87_prev_ui%203.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJTbmVha2Vyc1Bob3RvL25pa2Utem9vbS13aW5mbG8tMy04MzE1NjEtMDAxLW1lbnMtcnVubmluZy1zaG9lcy0xMTU1MDE4NzIzNnRpeXlqZTZsODdfcHJldl91aSAzLnBuZyIsImlhdCI6MTczNzgwNDM2NiwiZXhwIjoxNzY5MzQwMzY2fQ.OkSySMFkhhPmjWZwuvTSMSY3jJb8FemVCvGC_2bGSPg&t=2025-01-25T11%3A26%3A11.938Z")
+                .load("https://fnuichoiatdyljxuvfkq.supabase.co/storage/v1/object/sign/SneakersPhoto/nike-zoom-winflo-3-831561-001-mens-running-shoes-11550187236tiyyje6l87_prev_ui%203.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJTbmVha2Vyc1Bob3RvL25pa2Utem9vbS13aW5mbG8tMy04MzE1NjEtMDAxLW1lbnMtcnVubmluZy1zaG9lcy0xMTU1MDE4NzIzNnRpeXlqZTZsODdfcHJldl91aSAzLnBuZyIsImlhdCI6MTc0MjY0ODczNiwiZXhwIjoxNzc0MTg0NzM2fQ.GqYGk33OwLxXAU4I0J0DvGGO0He-kJTudfrnZmv_PSQ")
                 .into(binding.productImage)
 
             binding.textViewCount.text = getQuantity(sneaker.id.toLong()).toString()
@@ -49,14 +50,14 @@ class BasketAdapter(
 
             quantities[sneakerId] = newQuantity
             binding.textViewCount.text = newQuantity.toString()
-            binding.productPrice.text = (newQuantity * listSneakers.find { it.id.toLong() == sneakerId }?.Price!!).toString()
+            binding.productPrice.text = (newQuantity * listSneakers.find { it.id.toLong() == sneakerId }?.price!!).toString()
 
             onPriceChange(getAllPrice())
         }
     }
 
     fun getAllPrice() : Double{
-        return listSneakers.sumOf { (it.Price * (quantities[it.id.toLong()] ?: 1)).toDouble() }
+        return listSneakers.sumOf { (it.price * (quantities[it.id.toLong()] ?: 1)).toDouble() }
     }
 
     fun setupSwipeToDelete(recyclerView : RecyclerView){

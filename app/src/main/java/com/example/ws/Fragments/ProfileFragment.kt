@@ -57,8 +57,8 @@ class ProfileFragment : Fragment() {
                     }.decodeAs()
                 withContext(Dispatchers.Main){
                     if (users.isNotEmpty()){
-                        binding.etName.setText(users[0].Name)
-                        binding.etEmail.setText(users[0].Email)
+                        binding.etName.setText(users[0].name)
+                        binding.etEmail.setText(users[0].email)
                     } else{
                         binding.etName.setText("Пользователь не найден")
                     }
@@ -75,9 +75,8 @@ class ProfileFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val userData = Users(
-                    Name = binding.etName.text.toString(),
-                    Email = binding.etEmail.text.toString(),
-                    id_uuid = "f2cd6343-e0d7-40b9-892c-929108145adc"
+                    name = binding.etName.text.toString(),
+                    email = binding.etEmail.text.toString(),
                 )
                 client.postgrest["Users"]
                     .insert(userData)

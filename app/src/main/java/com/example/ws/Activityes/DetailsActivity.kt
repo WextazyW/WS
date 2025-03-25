@@ -1,5 +1,6 @@
 package com.example.ws.Activityes
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,6 +18,7 @@ class DetailsActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityDetailsBinding
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -26,6 +28,10 @@ class DetailsActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        binding.btnBack.setOnClickListener {
+            finish()
         }
 
         val sneakerId = intent.getIntExtra("SNEAKER_ID", 0)
@@ -46,19 +52,13 @@ class DetailsActivity : AppCompatActivity() {
 
         val sharedPreferencesFavorite = getSharedPreferences("favorites", Context.MODE_PRIVATE)
         var isFavorite = sharedPreferencesFavorite.getBoolean(sneakerId.toString(), false)
-        binding.btnAddToFavorite.setImageResource(if (isFavorite) R.drawable.favorite_fill else R.drawable.favorite)
+        binding.btnAddToFavorite.setImageResource(if (isFavorite) R.drawable.favorite_fill_fix else R.drawable.favorite_fix)
 
         binding.btnAddToFavorite.setOnClickListener {
             val editor = sharedPreferencesFavorite.edit()
-            if (isFavorite){
-                isFavorite = !isFavorite
-                editor.putBoolean(sneakerId.toString(), false)
-                binding.btnAddToFavorite.setImageResource(R.drawable.favorite)
-            }
-            else {
-                editor.putBoolean(sneakerId.toString(), true)
-                binding.btnAddToFavorite.setImageResource(R.drawable.favorite_fill)
-            }
+            isFavorite = !isFavorite
+            editor.putBoolean(sneakerId.toString(), isFavorite)
+            binding.btnAddToFavorite.setImageResource(if (isFavorite) R.drawable.favorite_fill_fix else R.drawable.favorite_fix)
             editor.apply()
         }
 
@@ -69,13 +69,8 @@ class DetailsActivity : AppCompatActivity() {
         binding.btnAddBasket.setOnClickListener {
             val editor = sharedPreferenceBasket.edit()
             isBasket = !isBasket
-            if (isBasket){
-                editor.putBoolean(sneakerId.toString(), true)
-                binding.btnAddBasket.text = "Убрать из корзины"
-            } else {
-                editor.putBoolean(sneakerId.toString(), false)
-                binding.btnAddBasket.text = "В корзину"
-            }
+            editor.putBoolean(sneakerId.toString(), isBasket)
+            binding.btnAddBasket.text = if (isBasket) "Убрать из корзины" else "В корзину"
             editor.apply()
         }
     }

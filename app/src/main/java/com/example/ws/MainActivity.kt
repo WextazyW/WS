@@ -29,12 +29,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //session 1 change
-        //session 2
-
         replaceFragment(HomeFragment())
         binding.btnGoBasket.setOnClickListener {
-            startActivity(Intent(this, BasketTestActivity::class.java))
+            startActivity(Intent(this, BasketActivity::class.java))
         }
         binding.bottomNavigationView.setOnItemSelectedListener{
             when(it.itemId){

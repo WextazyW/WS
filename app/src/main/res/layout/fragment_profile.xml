@@ -36,9 +36,10 @@
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:paddingStart="12dp"
             android:layout_marginTop="12dp"
-            android:background="@drawable/custom_et"/>
+            android:background="@drawable/custom_et"
+            android:paddingStart="12dp"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -52,10 +53,10 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:paddingStart="12dp"
             android:layout_marginTop="12dp"
-            android:background="@drawable/custom_et"/>
-
+            android:background="@drawable/custom_et"
+            android:paddingStart="12dp"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/Save"

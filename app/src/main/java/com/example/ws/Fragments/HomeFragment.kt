@@ -9,12 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.ws.Adapters.SneakerAdapter
 import com.example.ws.Model.Sneakers
 import com.example.ws.R
+import com.example.ws.ViewModel.SneakerViewModel
 import com.example.ws.client
 import com.example.ws.databinding.FragmentHomeBinding
 import io.github.jan.supabase.postgrest.postgrest
@@ -29,6 +32,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter : SneakerAdapter
     private var listSneakers = mutableListOf<Sneakers>()
+    private val viewModel : SneakerViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +51,7 @@ class HomeFragment : Fragment() {
         binding.btnTennis.setOnClickListener {
             adapter.filterList("Adidas")
         }
-
+        
         adapter = SneakerAdapter(listSneakers)
         binding.rvSneakersTwo.layoutManager = GridLayoutManager(context, 2)
         binding.rvSneakersTwo.adapter = adapter
@@ -60,28 +64,18 @@ class HomeFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) { filterServices(s.toString()) }
         })
 
-        loadSneakers()
+        viewModel.sneakers.observe(viewLifecycleOwner) { sneakers ->
+            adapter.updateList(sneakers)
+        }
+
+        viewModel.loadSneakers()
 
         return binding.root
     }
 
-    private fun loadSneakers() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = client.postgrest["Sneakers"]
-                .select()
-                .decodeAs<List<Sneakers>>()
-            listSneakers.clear()
-            listSneakers.addAll(response)
-            withContext(Dispatchers.Main){
-                adapter.notifyDataSetChanged()
-            }
-            adapter.updateList(listSneakers)
-        }
-    }
-
     private fun filterServices(s : String){
         val filterList = listSneakers.filter {
-            it.Name.contains(s, ignoreCase = true)
+            it.name.contains(s, ignoreCase = true)
         }
         adapter.updateList(filterList)
     }

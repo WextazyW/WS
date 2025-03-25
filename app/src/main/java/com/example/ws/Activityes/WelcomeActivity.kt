@@ -27,8 +27,6 @@ class WelcomeActivity : AppCompatActivity() {
             insets
         }
 
-        UserSession.userId = 7
-
         binding.viewSwitcher2.visibility = View.GONE
 
         binding.btn1.setOnClickListener {
