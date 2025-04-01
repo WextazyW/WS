@@ -12,7 +12,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.example.ws.Activityes.BasketActivity
-import com.example.ws.Activityes.BasketTestActivity
 import com.example.ws.Fragments.FavoriteSneakersFragment
 import com.example.ws.Fragments.HomeFragment
 import com.example.ws.Fragments.ProfileAllFragment

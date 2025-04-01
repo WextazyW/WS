@@ -8,32 +8,23 @@
     android:background="#F7F7F9"
     tools:context=".Activityes.OrderActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:itemCount="2"
-        tools:listitem="@layout/item_sneaker_basket" />
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        android:layout_marginTop="25dp"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="48dp"
+        android:background="@color/white"
+        app:cardCornerRadius="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView">
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_marginHorizontal="16dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
             android:orientation="vertical">
 
             <TextView
@@ -51,18 +42,21 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/favorite"/>
+                    android:src="@drawable/group_161" />
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="12dp">
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
                         android:text="emmanuel@gmail.com" />
 
                     <TextView
@@ -77,7 +71,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/favorite"/>
+                    android:src="@drawable/favorite" />
 
             </LinearLayout>
 
@@ -91,19 +85,21 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/favorite"/>
+                    android:src="@drawable/group_162" />
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="12dp">
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="emmanuel@gmail.com" />
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:text="+234-811-732-5298" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -117,13 +113,24 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/favorite"/>
+                    android:src="@drawable/favorite" />
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Адрес" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="#6A6A6A"
+                android:text="1082 Аэропорт, Нигерии"/>
+
         </LinearLayout>
-
-
 
     </androidx.cardview.widget.CardView>
 

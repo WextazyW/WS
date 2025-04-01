@@ -25,7 +25,7 @@ class AuthViewModel(private val authApi: AuthApiService, context: Context) : Vie
     fun registerUser(user: Users) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = authApi.signUp(user)
+                authApi.signUp(user)
                 withContext(Dispatchers.Main) {
                     _registrationStatus.value = "Успешная регистрация"
                 }
@@ -40,7 +40,7 @@ class AuthViewModel(private val authApi: AuthApiService, context: Context) : Vie
     fun loginUser(email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = authApi.login(email, password)
+                authApi.login(email, password)
                 withContext(Dispatchers.Main) {
                     _loginStatus.value = "Успешный вход"
                     val editor = sharedPreferences.edit()
@@ -61,7 +61,7 @@ class AuthViewModel(private val authApi: AuthApiService, context: Context) : Vie
                 withContext(Dispatchers.Main){
                     _loginStatus.value = "Выход из аккаунта"
                     val editor = sharedPreferences.edit()
-                    editor.putBoolean("isLoggedIn", true)
+                    editor.putBoolean("isLoggedIn", false)
                     editor.apply()
                 }
             } catch (e:Exception){

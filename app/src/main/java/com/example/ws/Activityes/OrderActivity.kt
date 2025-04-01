@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ws.Adapters.BasketAdapter
-import com.example.ws.Adapters.BasketTestAdapter
 import com.example.ws.Model.Sneakers
 import com.example.ws.R
 import com.example.ws.databinding.ActivityOrderBinding
@@ -14,7 +13,7 @@ import com.example.ws.databinding.ActivityOrderBinding
 class OrderActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityOrderBinding
-    private lateinit var adapter : BasketTestAdapter
+    private lateinit var adapter : BasketAdapter
     private var listSneakers = mutableListOf<Sneakers>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
