@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.ws"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -62,5 +62,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("ru.yoomoney.sdk.kassa.payments:yookassa-android-sdk:6.5.2")
+    implementation("com.yandex.android:maps.mobile:4.13.0-lite")
+    implementation("androidx.work:work-runtime:2.10.0")
 
 }

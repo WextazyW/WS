@@ -67,7 +67,8 @@ class BasketActivity : AppCompatActivity() {
         adapter.setupSwipeToDelete(binding.rvBasket)
 
         binding.btnCreateOrder.setOnClickListener {
-            startPayment()
+            startActivity(Intent(this@BasketActivity, OrderActivity::class.java))
+//            startPayment()
         }
 
         viewModel.sneakers.observe(this) { allSneakers ->
