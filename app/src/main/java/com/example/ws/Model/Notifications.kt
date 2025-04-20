@@ -1,8 +1,13 @@
 package com.example.ws.Model
 
-data class Notifications(
-    val id : Int,
-    val Name : String,
-    val Description : String,
-    val Date : String
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Notification(
+    @SerialName("id") val id: Int? = 0,
+    @SerialName("header") val header: String = "",
+    @SerialName("body") val body: String = "",
+    @SerialName("date") val date: String = "",
+    @SerialName("userId") val userId : Int? = 0
 )

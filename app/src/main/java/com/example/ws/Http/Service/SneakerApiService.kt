@@ -1,4 +1,4 @@
-package com.example.ws.Http
+package com.example.ws.Http.Service
 
 import com.example.ws.Model.Sneakers
 import retrofit2.http.GET

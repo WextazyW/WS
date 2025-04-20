@@ -8,9 +8,10 @@
     android:background="@color/white"
     tools:context=".Activityes.SignUpActivity">
 
+    <!-- Заголовок -->
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+        android:id="@+id/headerLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
@@ -21,7 +22,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="78dp"
+            android:layout_marginTop="28dp"
             android:gravity="center_horizontal"
             android:text="Регистрация"
             android:textColor="#2B2B2B"
@@ -31,88 +32,160 @@
         <TextView
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
             android:text="Заполните Свои данные или продолжите через социальные медиа!"
             android:textColor="#707B81"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5" />
 
     </LinearLayout>
 
+    <!-- Форма регистрации -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/formLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
         android:padding="16dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headerLayout">
 
+        <!-- Поле имени -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="Ваше имя"/>
+            android:text="Ваше имя"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/etName"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="xxxxxxxx"
-            android:paddingStart="14dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/custom_et"
-            android:layout_marginTop="12dp"/>
+            android:hint="xxxxxxxx"
+            android:paddingStart="14dp" />
 
+        <TextView
+            android:id="@+id/tvNameError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Имя не может быть пустым"
+            android:textColor="@color/red"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <!-- Поле email -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="Email"/>
+            android:layout_marginTop="12dp"
+            android:text="Email"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/custom_et"
             android:hint="xyz@gmail.com"
             android:inputType="textEmailAddress"
-            android:paddingStart="14dp"
-            android:background="@drawable/custom_et"
-            android:layout_marginTop="12dp"/>
+            android:paddingStart="14dp" />
 
+        <TextView
+            android:id="@+id/tvEmailError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Неправильный формат email"
+            android:textColor="@color/red"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <!-- Поле пароля -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textSize="16sp"
-            android:text="Пароль"/>
+            android:text="Пароль"
+            android:textSize="16sp" />
 
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="* * * * * *"
-            android:paddingStart="14dp"
-            android:paddingRight="14dp"
-            android:inputType="textPassword"
-            android:drawableRight="@drawable/eye_close"
+            android:layout_marginTop="12dp"
             android:background="@drawable/custom_et"
-            android:layout_marginTop="12dp"/>
+            android:drawableRight="@drawable/eye_close"
+            android:hint="* * * * * *"
+            android:inputType="textPassword"
+            android:paddingStart="14dp"
+            android:paddingRight="14dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Адрес"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/etAddress"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/custom_et"
+            android:hint="Казань"
+            android:inputType="textPassword"
+            android:paddingStart="14dp"
+            android:paddingRight="14dp" />
+
+        <TextView
+            android:id="@+id/tvPasswordError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Пароль должен содержать минимум 8 символов, буквы и цифры"
+            android:textColor="@color/red"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <!-- Чекбокс -->
         <CheckBox
             android:id="@+id/checkbox"
-            android:layout_width="254dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:text="Даю согласие на обработку персональных данных" />
-        
+
+        <!-- Кнопка регистрации -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signUpBtn"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            app:cornerRadius="13dp"
+            android:layout_marginTop="12dp"
             android:text="Зарегистрироваться"
-            android:layout_marginTop="12dp"/>
+            app:cornerRadius="13dp" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_go_signUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Вы впервые? Создать пользователя"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/formLayout"
+        app:layout_constraintVertical_bias="0.6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

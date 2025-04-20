@@ -13,10 +13,17 @@
         <action
             android:id="@+id/action_homeFragment_to_favoriteSneakersFragment"
             app:destination="@id/favoriteSneakersFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
     </fragment>
     <fragment
         android:id="@+id/favoriteSneakersFragment"
         android:name="com.example.ws.Fragments.FavoriteSneakersFragment"
         android:label="fragment_favorite_sneakers"
         tools:layout="@layout/fragment_favorite_sneakers" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.ws.Fragments.SearchFragment"
+        android:label="SearchFragment" />
 </navigation>

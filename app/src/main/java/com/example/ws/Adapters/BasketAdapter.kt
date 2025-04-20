@@ -25,7 +25,7 @@ class BasketAdapter(
             binding.productName.text = sneaker.name
             binding.productPrice.text = sneaker.price.toString()
             Glide.with(binding.root.context)
-                .load("https://fnuichoiatdyljxuvfkq.supabase.co/storage/v1/object/sign/SneakersPhoto/nike-zoom-winflo-3-831561-001-mens-running-shoes-11550187236tiyyje6l87_prev_ui%203.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJTbmVha2Vyc1Bob3RvL25pa2Utem9vbS13aW5mbG8tMy04MzE1NjEtMDAxLW1lbnMtcnVubmluZy1zaG9lcy0xMTU1MDE4NzIzNnRpeXlqZTZsODdfcHJldl91aSAzLnBuZyIsImlhdCI6MTc0MjY0ODczNiwiZXhwIjoxNzc0MTg0NzM2fQ.GqYGk33OwLxXAU4I0J0DvGGO0He-kJTudfrnZmv_PSQ")
+                .load(sneaker.imageUrl)
                 .into(binding.productImage)
 
             binding.textViewCount.text = getQuantity(sneaker.id.toLong()).toString()

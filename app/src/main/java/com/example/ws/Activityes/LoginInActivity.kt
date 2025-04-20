@@ -14,17 +14,19 @@ import com.example.ws.Http.RetrofitInstance
 import com.example.ws.MainActivity
 import com.example.ws.R
 import com.example.ws.Singleton.ToastUtil
+import com.example.ws.Singleton.UserSession
 import com.example.ws.ViewModel.AuthViewModel
 import com.example.ws.databinding.ActivityLoginInBinding
 
 class LoginInActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginInBinding
-    private val authViewModel: AuthViewModel by viewModels { SignUpViewModelFactory(RetrofitInstance.authApi, this) }
+    private val authViewModel: AuthViewModel by viewModels { SignUpViewModelFactory(RetrofitInstance.authApi, RetrofitInstance.notificationApi, this) }
     private var isVisibility = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        UserSession.init(this)
         enableEdgeToEdge()
         binding = ActivityLoginInBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -35,9 +37,9 @@ class LoginInActivity : AppCompatActivity() {
         }
 
         val sharedPreferences: SharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-         val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
+        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
 
-        if (isLoggedIn) {
+        if (isLoggedIn && UserSession.userId != 0) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
@@ -78,16 +80,17 @@ class LoginInActivity : AppCompatActivity() {
 
         authViewModel.loginStatus.observe(this) { status ->
             if (status == "Успешный вход") {
+                authViewModel.userId.let {
+                    if (it != null) {
+                        UserSession.userId = it
+                    }
+                }
                 ToastUtil.showSuccessToast(this)
                 startActivity(Intent(this, SplashActivity::class.java))
                 finish()
             } else {
                 ToastUtil.showFailedToast(this)
             }
-        }
-
-        binding.tvVosstanovit.setOnClickListener {
-            startActivity(Intent(this@LoginInActivity, SendOTPActivity::class.java))
         }
     }
 

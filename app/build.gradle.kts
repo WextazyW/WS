@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.Packaging
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -34,6 +36,13 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    packagingOptions {
+        exclude("META-INF/LICENSE.md")
+        exclude("META-INF/NOTICE.md")
+        exclude("META-INF/DEPENDENCIES")
+        exclude("META-INF/LICENSE")
+        exclude("META-INF/NOTICE")
+    }
 }
 
 dependencies {
@@ -64,5 +73,8 @@ dependencies {
     implementation("ru.yoomoney.sdk.kassa.payments:yookassa-android-sdk:6.5.2")
     implementation("com.yandex.android:maps.mobile:4.13.0-lite")
     implementation("androidx.work:work-runtime:2.10.0")
+    implementation("com.sun.mail:android-mail:1.6.7")
+    implementation("com.sun.mail:android-activation:1.6.7")
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
 
 }

@@ -1,5 +1,6 @@
 package com.example.ws.Fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,11 +15,11 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.ws.Activityes.SearchActivity
 import com.example.ws.Adapters.SneakerAdapter
 import com.example.ws.Model.Sneakers
 import com.example.ws.R
 import com.example.ws.ViewModel.SneakerViewModel
-import com.example.ws.client
 import com.example.ws.databinding.FragmentHomeBinding
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.CoroutineScope
@@ -39,45 +40,31 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        binding.btnAll.setOnClickListener {
-            adapter.filterList("Все")
-        }
-
-        binding.btnOutdoor.setOnClickListener {
-            adapter.filterList("Nike")
-        }
-
-        binding.btnTennis.setOnClickListener {
-            adapter.filterList("Adidas")
-        }
         
         adapter = SneakerAdapter(listSneakers)
         binding.rvSneakersTwo.layoutManager = GridLayoutManager(context, 2)
         binding.rvSneakersTwo.adapter = adapter
 
-        binding.etSearch.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) { filterServices(s.toString()) }
-        })
+        binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                startActivity(Intent(context, SearchActivity::class.java))
+            }
+        }
 
         viewModel.sneakers.observe(viewLifecycleOwner) { sneakers ->
+            binding.shimmerLayout.stopShimmer()
+
+            binding.shimmerLayout.visibility = View.GONE
+            binding.rvSneakersTwo.visibility = View.VISIBLE
+
             adapter.updateList(sneakers)
         }
+
+        binding.shimmerLayout.startShimmer()
 
         viewModel.loadSneakers()
 
         return binding.root
-    }
-
-    private fun filterServices(s : String){
-        val filterList = listSneakers.filter {
-            it.name.contains(s, ignoreCase = true)
-        }
-        adapter.updateList(filterList)
     }
 
 }

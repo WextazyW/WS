@@ -9,8 +9,8 @@
     tools:context=".Activityes.LoginInActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
+        android:id="@+id/topTextContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
@@ -19,9 +19,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:id="@+id/tvGreeting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="78dp"
+            android:layout_marginTop="32dp"
             android:gravity="center_horizontal"
             android:text="Привет"
             android:textColor="#2B2B2B"
@@ -29,27 +30,28 @@
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="300dp"
+            android:id="@+id/tvDescription"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
             android:gravity="center_horizontal"
-            android:text="Заполните Свои данные или продолжите через социальные медиа!"
+            android:text="Заполните свои данные или продолжите через социальные медиа!"
             android:textColor="#707B81"
             android:textSize="16sp" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
+        android:id="@+id/formContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:orientation="vertical"
         android:padding="16dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+        app:layout_constraintTop_toBottomOf="@+id/topTextContainer">
 
         <TextView
             android:layout_width="wrap_content"
@@ -86,19 +88,11 @@
             android:paddingStart="14dp"
             android:paddingRight="14dp" />
 
-        <TextView
-            android:id="@+id/tvVosstanovit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="12dp"
-            android:text="Восстановить" />
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signUpBtn"
             android:layout_width="match_parent"
             android:layout_height="58dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="42dp"
             android:text="Войти"
             app:cornerRadius="13dp" />
 
@@ -108,11 +102,12 @@
         android:id="@+id/tv_go_signUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="168dp"
+        android:layout_marginTop="24dp"
         android:text="Вы впервые? Создать пользователя"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/formContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

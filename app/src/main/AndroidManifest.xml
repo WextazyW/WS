@@ -5,9 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <uses-feature android:name="android.hardware.opengles.aep" android:required="true"/>
+    <uses-feature
+        android:name="android.hardware.opengles.aep"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -21,12 +23,17 @@
         android:theme="@style/Theme.WS"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".Activityes.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activityes.ConfirmCodeActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.yandex.maps.api_key"
             android:value="96c8c967-78f2-4964-8857-179375bb898f" />
-        <activity
-            android:name=".Activityes.MapActivity"
-            android:exported="false" />
+
         <activity
             android:name=".Activityes.OrderActivity"
             android:exported="false" />
@@ -34,19 +41,8 @@
             android:name=".Activityes.BasketActivity"
             android:exported="false" />
         <activity
-            android:name=".Activityes.VerifyActiivty"
-            android:exported="false" />
-        <activity
-            android:name=".Activityes.SendOTPActivity"
-            android:exported="false" />
-        <activity
             android:name=".Activityes.DetailsActivity"
             android:exported="false" />
-        <activity
-            android:name=".Activityes.WelcomeActivity"
-            android:exported="false">
-
-        </activity>
         <activity
             android:name=".Activityes.LoginInActivity"
             android:exported="true">
@@ -58,19 +54,13 @@
         </activity>
         <activity
             android:name=".Activityes.SplashActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".Activityes.SignUpActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".MainActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"></activity>
     </application>
 
 </manifest>

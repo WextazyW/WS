@@ -1,5 +1,8 @@
 package com.example.ws.Http
 
+import com.example.ws.Http.Service.AuthApiService
+import com.example.ws.Http.Service.NotificationApiService
+import com.example.ws.Http.Service.SneakerApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -20,5 +23,13 @@ object RetrofitInstance {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(AuthApiService::class.java)
+    }
+
+    val notificationApi : NotificationApiService by lazy {
+        Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(NotificationApiService::class.java)
     }
 }

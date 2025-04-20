@@ -1,21 +1,18 @@
 package com.example.ws.Fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
+import com.example.ws.Http.RetrofitInstance
 import com.example.ws.Model.Users
-import com.example.ws.R
 import com.example.ws.Singleton.UserSession
-import com.example.ws.client
 import com.example.ws.databinding.FragmentProfileBinding
-import io.github.jan.supabase.postgrest.postgrest
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ProfileFragment : Fragment() {
 
@@ -27,74 +24,57 @@ class ProfileFragment : Fragment() {
     ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        try {
-            loadInformation(UserSession.userId!!)
-        } catch (e:Exception){
-            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
-        }
-
-        binding.etName.isFocusable = false
-        binding.etName.isEnabled = false
-
-        binding.etEmail.isFocusable = false
-        binding.etEmail.isEnabled = false
+        loadUserData()
 
         binding.Save.setOnClickListener {
-            createProfile()
+            saveUserData()
         }
 
         return binding.root
     }
 
-    private fun loadInformation(id : Int) {
-        CoroutineScope(Dispatchers.IO).launch {
+    private fun loadUserData() {
+        lifecycleScope.launch {
             try {
-                val users : List<Users> = client.postgrest["Users"]
-                    .select {
-                        filter {
-                            eq("id", id)
-                        }
-                    }.decodeAs()
-                withContext(Dispatchers.Main){
-                    if (users.isNotEmpty()){
-                        binding.etName.setText(users[0].name)
-                        binding.etEmail.setText(users[0].email)
-                    } else{
-                        binding.etName.setText("Пользователь не найден")
-                    }
+                val userId = UserSession.userId
+                if (userId != 0) {
+                    val user = RetrofitInstance.authApi.getUserById(userId)
+                    binding.etName.setText(user.name)
+                    binding.etEmail.setText(user.email)
+                    binding.etAddress.setText(user.address)
+                } else {
+                    Log.e("ProfileFragment", "User ID is not set")
                 }
-            } catch (e : Exception){
-                withContext(Dispatchers.Main){
-                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
-                }
+            } catch (e: Exception) {
+                Log.e("ProfileFragment", "Failed to load user data", e)
             }
         }
     }
 
-    private fun createProfile(){
-        CoroutineScope(Dispatchers.IO).launch {
+    private fun saveUserData() {
+        lifecycleScope.launch {
             try {
-                val userData = Users(
-                    name = binding.etName.text.toString(),
-                    email = binding.etEmail.text.toString(),
-                )
-                client.postgrest["Users"]
-                    .insert(userData)
-                    .decodeAs<List<Users>>()
-            } catch (e:Exception){
-                withContext(Dispatchers.Main){
-                    Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show()
+                val userId = UserSession.userId
+                if (userId != 0) {
+                    val updatedUser = Users(
+                        id = userId,
+                        name = binding.etName.text.toString(),
+                        email = binding.etEmail.text.toString(),
+                        address = binding.etAddress.text.toString(),
+                    )
+
+                    RetrofitInstance.authApi.updateUser(userId, updatedUser)
+
+                    Toast.makeText(requireContext(), "Данные успешно сохранены", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.e("ProfileFragment", "User ID is not set")
                 }
+            } catch (e: Exception) {
+                Log.e("ProfileFragment", "Failed to save user data", e)
+                Toast.makeText(requireContext(), "Данные успешно сохранены", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 }
-
-
-
-
-
-
-
-
 

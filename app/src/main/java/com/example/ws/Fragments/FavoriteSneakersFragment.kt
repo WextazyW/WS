@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.ws.Adapters.AllSneakersAdapter
 import com.example.ws.Model.Sneakers
 import com.example.ws.ViewModel.SneakerViewModel
-import com.example.ws.client
 import com.example.ws.databinding.FragmentFavoriteSneakersBinding
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.Dispatchers

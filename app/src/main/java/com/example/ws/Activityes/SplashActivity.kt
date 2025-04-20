@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.ws.MainActivity
 import com.example.ws.R
 
 class SplashActivity : AppCompatActivity() {
@@ -20,7 +21,7 @@ class SplashActivity : AppCompatActivity() {
             insets
         }
         Handler().postDelayed({
-            startActivity(Intent(this@SplashActivity, WelcomeActivity::class.java))
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
         }, 3000)
     }
 }
