@@ -1,6 +1,7 @@
 package com.example.ws.Activityes
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -28,6 +29,8 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        window.navigationBarColor = Color.parseColor("#FFFFFF")
+
         adapter = AllSneakersAdapter(mutableListOf())
         binding.rvSearchResults.layoutManager = GridLayoutManager(this, 2)
         binding.rvSearchResults.adapter = adapter
@@ -40,6 +43,16 @@ class SearchActivity : AppCompatActivity() {
         }
 
         viewModel.loadSneakers()
+
+        binding.btnMensShoes.setOnClickListener {
+            filterByType(1)
+            updateButtonStyles(isMenSelected = true)
+        }
+
+        binding.btnWomenShoes.setOnClickListener {
+            filterByType(2)
+            updateButtonStyles(isMenSelected = false)
+        }
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -55,6 +68,27 @@ class SearchActivity : AppCompatActivity() {
         viewModel.sneakers.value?.let { sneakers ->
             val filteredList = sneakers.filter { it.name.contains(query, ignoreCase = true) }
             adapter.updateList(filteredList)
+        }
+    }
+
+    private fun filterByType(typeId: Int) {
+        viewModel.sneakers.value?.let { sneakers ->
+            val filteredList = sneakers.filter { it.typeId == typeId }
+            adapter.updateList(filteredList)
+        }
+    }
+
+    private fun updateButtonStyles(isMenSelected: Boolean) {
+        if (isMenSelected) {
+            binding.btnMensShoes.setBackgroundColor(Color.parseColor("#48B2E7"))
+            binding.btnMensShoes.setTextColor(Color.WHITE)
+            binding.btnWomenShoes.setBackgroundColor(Color.parseColor("#F7F7F9"))
+            binding.btnWomenShoes.setTextColor(Color.GRAY)
+        } else {
+            binding.btnWomenShoes.setBackgroundColor(Color.parseColor("#48B2E7"))
+            binding.btnWomenShoes.setTextColor(Color.WHITE)
+            binding.btnMensShoes.setBackgroundColor(Color.parseColor("#F7F7F9"))
+            binding.btnMensShoes.setTextColor(Color.GRAY)
         }
     }
 

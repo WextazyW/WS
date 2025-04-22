@@ -3,6 +3,7 @@ package com.example.ws.Activityes
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
@@ -39,6 +40,13 @@ class BasketActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        window.statusBarColor = Color.parseColor("#F7F7F9")
+        window.navigationBarColor = Color.parseColor("#FFFFFF")
+
+        binding.btnBack.setOnClickListener {
+            finish()
         }
 
         adapter = BasketAdapter(listSneakers, ::updateTotalPrice, this)
@@ -78,7 +86,6 @@ class BasketActivity : AppCompatActivity() {
         listSneakers.addAll(newList)
         adapter.notifyDataSetChanged()
         updateTotalPrice(adapter.getAllPrice())
-        binding.tvCount.text = "${listSneakers.size} товара"
     }
 
 }

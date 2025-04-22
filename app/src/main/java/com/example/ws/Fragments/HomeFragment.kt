@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.ws.Activityes.AllSneakerActivity
 import com.example.ws.Activityes.SearchActivity
 import com.example.ws.Adapters.SneakerAdapter
 import com.example.ws.Model.Sneakers
@@ -49,6 +50,10 @@ class HomeFragment : Fragment() {
             if (hasFocus) {
                 startActivity(Intent(context, SearchActivity::class.java))
             }
+        }
+
+        binding.goAllSneakers.setOnClickListener {
+            startActivity(Intent(context, AllSneakerActivity::class.java))
         }
 
         viewModel.sneakers.observe(viewLifecycleOwner) { sneakers ->

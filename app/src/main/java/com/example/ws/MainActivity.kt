@@ -22,6 +22,7 @@ import com.example.ws.Activityes.LoginInActivity
 import com.example.ws.Fragments.FavoriteSneakersFragment
 import com.example.ws.Fragments.HomeFragment
 import com.example.ws.Fragments.NotificationFragment
+import com.example.ws.Fragments.OrderHistoryFragment
 import com.example.ws.Fragments.ProfileFragment
 import com.example.ws.databinding.ActivityMainBinding
 import com.google.android.material.badge.BadgeDrawable
@@ -91,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(FavoriteSneakersFragment())
                 }
                 R.id.nav_orders -> {
-
+                    replaceFragment(OrderHistoryFragment())
                 }
                 R.id.nav_exit -> {
                     AlertDialog.Builder(this)

@@ -13,6 +13,7 @@ import com.example.ws.MainActivity
 import com.example.ws.Model.Sneakers
 import com.example.ws.R
 import com.example.ws.databinding.ItemSneakerBinding
+import com.google.gson.Gson
 
 class SneakerAdapter(
     listSneaker : List<Sneakers>
@@ -48,29 +49,31 @@ class SneakerAdapter(
 
             binding.addToBasket.setOnClickListener {
                 val editor = sharedPreferenceBasket.edit()
-                isBasket = !isBasket
-                editor.putBoolean(sneaker.id.toString(), isBasket)
-                binding.addToBasket.setImageResource(if (isBasket) R.drawable.frame_1000000821__1_ else R.drawable.frame_1000000821)
+                val basketJson = sharedPreferenceBasket.getString("cart", "{}")
+                val basketMap = Gson().fromJson(basketJson, Map::class.java) as MutableMap<String, Map<String, Any>>
 
-                if (isBasket) {
-                    updateBasketCounter(binding.root.context, 1)
+                val sneakerId = sneaker.id.toString()
+
+                if (basketMap.containsKey(sneakerId)) {
+                    // Если товар уже в корзине, удаляем его
+                    basketMap.remove(sneakerId)
                 } else {
-                    updateBasketCounter(binding.root.context, -1)
+                    // Если товара нет в корзине, добавляем его с количеством 1
+                    basketMap[sneakerId] = mapOf("quantity" to 1)
                 }
 
+                // Сохраняем обновленную корзину в JSON
+                editor.putString("cart", Gson().toJson(basketMap))
+
+                // Обновляем булево значение
+                editor.putBoolean(sneakerId, basketMap.containsKey(sneakerId))
+
                 editor.apply()
+
+                // Обновляем иконку корзины
+                binding.addToBasket.setImageResource(if (basketMap.containsKey(sneakerId)) R.drawable.frame_1000000821__1_ else R.drawable.frame_1000000821)
             }
         }
-    }
-
-    private fun updateBasketCounter(context: Context, delta: Int) {
-        val sharedPreferenceBasket = context.getSharedPreferences("basket", Context.MODE_PRIVATE)
-        val currentCount = sharedPreferenceBasket.getInt("basket_count", 0)
-        val newCount = currentCount + delta
-        sharedPreferenceBasket.edit().putInt("basket_count", newCount).apply()
-
-        val activity = context as? MainActivity
-        activity?.updateBasketCounter(newCount)
     }
 
     override fun onCreateViewHolder(
@@ -90,6 +93,7 @@ class SneakerAdapter(
                 putExtra("SNEAKER_ID", limitedList[position].id)
                 putExtra("SNEAKER_NAME", limitedList[position].name)
                 putExtra("SNEAKER_PRICE", limitedList[position].price)
+                putExtra("SNEAKER_TYPE", limitedList[position].typeId)
                 putExtra("SNEAKER_DESCRIPTION", limitedList[position].description)
                 putExtra("SNEAKER_IMAGE", limitedList[position].imageUrl)
             }

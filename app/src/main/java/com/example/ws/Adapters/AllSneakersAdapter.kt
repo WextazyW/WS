@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ws.Activityes.DetailsActivity
+import com.example.ws.MainActivity
 import com.example.ws.Model.Sneakers
 import com.example.ws.R
 import com.example.ws.databinding.ItemSneakerBinding
@@ -30,13 +31,8 @@ class AllSneakersAdapter(
             binding.btnAddFavorite.setOnClickListener {
                 val editor = sharedPreferenceFavorite.edit()
                 isFavorite = !isFavorite
-                if (isFavorite){
-                    editor.putBoolean(sneaker.id.toString(), false)
-                    binding.btnAddFavorite.setImageResource(R.drawable.favorite)
-                } else {
-                    editor.putBoolean(sneaker.id.toString(), true)
-                    binding.btnAddFavorite.setImageResource(R.drawable.favorite_fill)
-                }
+                editor.putBoolean(sneaker.id.toString(), isFavorite)
+                binding.btnAddFavorite.setImageResource(if (isFavorite) R.drawable.favorite_fill else R.drawable.favorite)
                 editor.apply()
             }
 
@@ -46,17 +42,29 @@ class AllSneakersAdapter(
 
             binding.addToBasket.setOnClickListener {
                 val editor = sharedPreferenceBasket.edit()
-                if (isBasket){
-                    isBasket = !isBasket
-                    editor.putBoolean(sneaker.id.toString(), false)
-                    binding.addToBasket.setImageResource(R.drawable.frame_1000000821)
+                isBasket = !isBasket
+                editor.putBoolean(sneaker.id.toString(), isBasket)
+                binding.addToBasket.setImageResource(if (isBasket) R.drawable.frame_1000000821__1_ else R.drawable.frame_1000000821)
+
+                if (isBasket) {
+                    updateBasketCounter(binding.root.context, 1)
                 } else {
-                    editor.putBoolean(sneaker.id.toString(), true)
-                    binding.addToBasket.setImageResource(R.drawable.frame_1000000821__1_)
+                    updateBasketCounter(binding.root.context, -1)
                 }
+
                 editor.apply()
             }
         }
+    }
+
+    private fun updateBasketCounter(context: Context, delta: Int) {
+        val sharedPreferenceBasket = context.getSharedPreferences("basket", Context.MODE_PRIVATE)
+        val currentCount = sharedPreferenceBasket.getInt("basket_count", 0)
+        val newCount = currentCount + delta
+        sharedPreferenceBasket.edit().putInt("basket_count", newCount).apply()
+
+        val activity = context as? MainActivity
+        activity?.updateBasketCounter(newCount)
     }
 
     override fun onCreateViewHolder(
@@ -74,6 +82,7 @@ class AllSneakersAdapter(
             val intent = Intent(context, DetailsActivity::class.java).apply {
                 putExtra("SNEAKER_NAME", listSneakers[position].name)
                 putExtra("SNEAKER_PRICE", listSneakers[position].price)
+                putExtra("SNEAKER_TYPE", listSneakers[position].typeId)
                 putExtra("SNEAKER_DESCRIPTION", listSneakers[position].description)
                 putExtra("SNEAKER_IMAGE", listSneakers[position].imageUrl)
             }

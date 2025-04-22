@@ -1,7 +1,9 @@
 package com.example.ws.Activityes
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
@@ -14,10 +16,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ws.Http.RetrofitInstance
 import com.example.ws.MainActivity
+import com.example.ws.Model.OrderItem
+import com.example.ws.Model.Orders
 import com.example.ws.Model.Users
 import com.example.ws.R
 import com.example.ws.Singleton.UserSession
 import com.example.ws.databinding.ActivityOrderBinding
+import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,6 +39,7 @@ import ru.yoomoney.sdk.kassa.payments.checkoutParameters.PaymentMethodType
 import ru.yoomoney.sdk.kassa.payments.checkoutParameters.PaymentParameters
 import ru.yoomoney.sdk.kassa.payments.checkoutParameters.SavePaymentMethod
 import java.math.BigDecimal
+import java.time.LocalDate
 import java.util.Currency
 import java.util.Locale
 
@@ -44,11 +50,21 @@ class OrderActivity : AppCompatActivity() {
     private var deliveryCost: Double = 0.0
     private var finalTotal: Double = 0.0
     private var paymentAmount: Double = 0.0
+    private var tokenAmount: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityOrderBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        window.statusBarColor = Color.parseColor("#F7F7F9")
+        window.navigationBarColor = Color.parseColor("#FFFFFF")
 
         intent.extras?.let {
             totalPrice = it.getDouble("totalPrice")
@@ -57,12 +73,6 @@ class OrderActivity : AppCompatActivity() {
         }
 
         updateUIWithPrices()
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
         CoroutineScope(Dispatchers.Main).launch {
             try {
@@ -125,9 +135,9 @@ class OrderActivity : AppCompatActivity() {
     }
 
     private fun startPayment() {
-        paymentAmount = finalTotal
+        tokenAmount = finalTotal
         val paymentParameters = PaymentParameters(
-            amount = Amount(BigDecimal.valueOf(paymentAmount), Currency.getInstance("RUB")),
+            amount = Amount(BigDecimal.valueOf("%.2f".format(Locale.US, tokenAmount).toDouble()), Currency.getInstance("RUB")),
             title = "Кроссовки Nike",
             subtitle = "Описание товара",
             clientApplicationKey = "test_MTA2MjU0MOUIhopGcGHlehf1n1nMu2TInO-K8Q0-JcM",
@@ -173,19 +183,21 @@ class OrderActivity : AppCompatActivity() {
 
     @SuppressLint("StaticFieldLeak")
     private inner class SendPaymentTask : AsyncTask<String, Void, String>() {
+        private lateinit var context: Context
+
+        init {
+            this.context = this@OrderActivity
+        }
 
         @Deprecated("Deprecated in Java")
         override fun doInBackground(vararg params: String?): String {
             val paymentToken = params[0]
             val client = OkHttpClient()
-
-            val formattedAmount = "%.2f".format(Locale.US, paymentAmount)
-
+            val formattedAmount = "%.2f".format(Locale.US, tokenAmount)
             Log.d("PaymentRequest", "Formatted amount with dot: $formattedAmount")
-
             val jsonObject = JSONObject().apply {
                 put("amount", JSONObject().apply {
-                    put("value", formattedAmount.toDouble()) // Передаем значение как число с точкой
+                    put("value", formattedAmount.toDouble())
                     put("currency", "RUB")
                 })
                 put("payment_token", paymentToken)
@@ -196,19 +208,15 @@ class OrderActivity : AppCompatActivity() {
                 put("capture", true)
                 put("description", "Описание заказа")
             }
-
             Log.d("PaymentRequest", "Request body: ${jsonObject.toString()}")
-
             val requestBody = RequestBody.create(
                 "application/json; charset=utf-8".toMediaTypeOrNull(),
                 jsonObject.toString()
             )
-
             val shopId = "1062540"
             val secretKey = "test__pqwCfXbihuBzDCPxkTIsn84_3dokI3V7lOhkJm32BU"
             val credentials = "$shopId:$secretKey"
             val base64Credentials = android.util.Base64.encodeToString(credentials.toByteArray(), android.util.Base64.NO_WRAP)
-
             val request = Request.Builder()
                 .url("https://api.yookassa.ru/v3/payments")
                 .addHeader("Authorization", "Basic $base64Credentials")
@@ -216,7 +224,6 @@ class OrderActivity : AppCompatActivity() {
                 .addHeader("Content-Type", "application/json")
                 .post(requestBody)
                 .build()
-
             try {
                 val response = client.newCall(request).execute()
                 return response.body?.string() ?: "No response"
@@ -229,19 +236,68 @@ class OrderActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             Log.d("response", "Server response: $result")
-
             try {
                 val jsonResponse = JSONObject(result ?: "{}")
                 val status = jsonResponse.optString("status", "")
-
                 if (status == "succeeded") {
-                    Log.d("PaymentSuccess", "Payment succeeded, navigating to MainActivity")
-                    Toast.makeText(this@OrderActivity, "Платеж успешно завершен!", Toast.LENGTH_SHORT).show()
+                    Log.d("PaymentSuccess", "Payment succeeded, creating order...")
 
-                    val intent = Intent(this@OrderActivity, MainActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-                    startActivity(intent)
-                    finish()
+                    val userId = UserSession.userId
+                    if (userId == null) {
+                        Log.e("OrderError", "User ID is null")
+                        Toast.makeText(this@OrderActivity, "Ошибка: пользователь не авторизован", Toast.LENGTH_SHORT).show()
+                        return
+                    }
+
+                    // Создаем заказ
+                    val order = Orders(
+                        id = 0, // ID будет присвоен сервером
+                        userId = userId,
+                        orderDate = java.time.LocalDate.now().toString(), // Текущая дата
+                        status = "Pending", // Статус заказа
+                        deliveryAddress = binding.tvAddress.text.toString().trim(),
+                        totalAmount = finalTotal.toFloat()
+                    )
+
+                    CoroutineScope(Dispatchers.Main).launch {
+                        try {
+                            // Отправляем заказ на сервер
+                            val createdOrder = RetrofitInstance.orderApi.createOrder(order)
+                            val orderId = createdOrder.id
+
+                            // Получаем товары из корзины
+                            val basketItems = getBasketItems(this@OrderActivity)
+
+                            // Отправляем каждый товар на сервер
+                            for ((sneakerId, quantity) in basketItems) {
+                                val orderItem = OrderItem(
+                                    id = 0, // ID будет присвоен сервером
+                                    orderId = orderId,
+                                    sneakerId = sneakerId,
+                                    quantity = quantity
+                                )
+                                try {
+                                    RetrofitInstance.orderApi.createOrderItem(orderItem)
+                                } catch (e: Exception) {
+                                    Log.e("OrderError", "Failed to create order item for sneakerId=$sneakerId", e)
+                                }
+                            }
+
+                            // Очищаем корзину
+                            val sharedPreferences = getSharedPreferences("basket", Context.MODE_PRIVATE)
+                            sharedPreferences.edit().clear().apply()
+
+                            // Переходим на MainActivity
+                            Toast.makeText(this@OrderActivity, "Платеж успешно завершен!", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this@OrderActivity, MainActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
+                            finish()
+                        } catch (e: Exception) {
+                            Log.e("OrderError", "Failed to create order", e)
+                            Toast.makeText(this@OrderActivity, "Не удалось создать заказ", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 } else {
                     Log.e("PaymentError", "Payment failed: $result")
                     Toast.makeText(this@OrderActivity, "Ошибка при обработке платежа", Toast.LENGTH_SHORT).show()
@@ -250,6 +306,21 @@ class OrderActivity : AppCompatActivity() {
                 Log.e("PaymentError", "Failed to parse server response", e)
                 Toast.makeText(this@OrderActivity, "Не удалось обработать ответ сервера", Toast.LENGTH_SHORT).show()
             }
+        }
+    }
+
+    fun getBasketItems(context: Context): List<Pair<Int, Int>> {
+        val sharedPreferenceBasket = context.getSharedPreferences("basket", Context.MODE_PRIVATE)
+        val basketJson = sharedPreferenceBasket.getString("cart", "{}")
+        val basketMap = Gson().fromJson(basketJson, Map::class.java) as Map<String, Map<String, Any>>
+
+        return basketMap.map { (sneakerId, data) ->
+            val quantity = when (val q = data["quantity"]) {
+                is Double -> q.toInt() // Преобразуем Double в Int
+                is Int -> q           // Если уже Int, используем его
+                else -> 0             // Если тип неизвестен, используем 0
+            }
+            Pair(sneakerId.toInt(), quantity)
         }
     }
 }

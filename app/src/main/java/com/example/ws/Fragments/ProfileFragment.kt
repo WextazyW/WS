@@ -13,10 +13,11 @@ import com.example.ws.Model.Users
 import com.example.ws.Singleton.UserSession
 import com.example.ws.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 
 class ProfileFragment : Fragment() {
 
-    private lateinit var binding : FragmentProfileBinding
+    private lateinit var binding: FragmentProfileBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,7 +28,9 @@ class ProfileFragment : Fragment() {
         loadUserData()
 
         binding.Save.setOnClickListener {
-            saveUserData()
+            if (validateInput()) {
+                saveUserData()
+            }
         }
 
         return binding.root
@@ -51,6 +54,46 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun validateInput(): Boolean {
+        val name = binding.etName.text.toString().trim()
+        val email = binding.etEmail.text.toString().trim()
+        val address = binding.etAddress.text.toString().trim()
+
+        if (name.isEmpty()) {
+            binding.etName.error = "Введите имя"
+            return false
+        }
+
+        if (email.isEmpty()) {
+            binding.etEmail.error = "Введите email"
+            return false
+        }
+        if (!isValidEmail(email)) {
+            binding.etEmail.error = "Некорректный email"
+            return false
+        }
+
+        if (address.isEmpty()) {
+            binding.etAddress.error = "Введите адрес"
+            return false
+        }
+
+        return true
+    }
+
+    private fun isValidEmail(email: String): Boolean {
+        val emailPattern = Pattern.compile(
+            "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                    "\\@" +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "(" +
+                    "\\." +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                    ")+"
+        )
+        return emailPattern.matcher(email).matches()
+    }
+
     private fun saveUserData() {
         lifecycleScope.launch {
             try {
@@ -58,9 +101,9 @@ class ProfileFragment : Fragment() {
                 if (userId != 0) {
                     val updatedUser = Users(
                         id = userId,
-                        name = binding.etName.text.toString(),
-                        email = binding.etEmail.text.toString(),
-                        address = binding.etAddress.text.toString(),
+                        name = binding.etName.text.toString().trim(),
+                        email = binding.etEmail.text.toString().trim(),
+                        address = binding.etAddress.text.toString().trim(),
                     )
 
                     RetrofitInstance.authApi.updateUser(userId, updatedUser)
@@ -71,10 +114,8 @@ class ProfileFragment : Fragment() {
                 }
             } catch (e: Exception) {
                 Log.e("ProfileFragment", "Failed to save user data", e)
-                Toast.makeText(requireContext(), "Данные успешно сохранены", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Ошибка при сохранении данных", Toast.LENGTH_SHORT).show()
             }
         }
     }
-
 }
-

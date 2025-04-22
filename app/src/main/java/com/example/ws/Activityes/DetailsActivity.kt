@@ -36,9 +36,14 @@ class DetailsActivity : AppCompatActivity() {
 
         val sneakerId = intent.getIntExtra("SNEAKER_ID", 0)
         val sneakersImage = intent.getStringExtra("SNEAKER_IMAGE")
-        binding.desc.maxLines = 3
+        binding.desc.maxLines = 6
         binding.name.text = intent.getStringExtra("SNEAKER_NAME")
         binding.desc.text = intent.getStringExtra("SNEAKER_DESCRIPTION")
+        binding.type.text = when (intent.getIntExtra("SNEAKER_TYPE", 0)) {
+            1 -> "Мужские кроссовки"
+            2 -> "Женские кроссовки"
+            else -> "Неизвестный тип"
+        }
         binding.price.text = "₽"+intent.getFloatExtra("SNEAKER_PRICE", 0f).toString()
 
         Glide.with(this)

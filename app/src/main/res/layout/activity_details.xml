@@ -30,16 +30,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="14dp"
+            android:paddingEnd="34dp"
             android:layout_weight="1"
             android:gravity="center"
             android:text="Sneaker Shop"
             android:textSize="18sp" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/group_27" />
 
     </LinearLayout>
 

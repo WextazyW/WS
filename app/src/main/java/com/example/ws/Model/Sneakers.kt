@@ -8,6 +8,6 @@ data class Sneakers(
     val name : String,
     val price : Float,
     val description : String = "",
-    val type : String = "Men's shoes",
+    val typeId : Int,
     val imageUrl: String = ""
 )
