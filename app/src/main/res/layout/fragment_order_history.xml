@@ -28,6 +28,16 @@
             android:layout_height="wrap_content"
             android:paddingTop="8dp" />
 
+        <TextView
+            android:id="@+id/emptyTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Заказов нет"
+            android:gravity="center"
+            android:padding="16dp"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

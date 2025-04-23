@@ -29,7 +29,12 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
         window.navigationBarColor = Color.parseColor("#FFFFFF")
+        window.statusBarColor = Color.parseColor("#F7F7F9")
 
         adapter = AllSneakersAdapter(mutableListOf())
         binding.rvSearchResults.layoutManager = GridLayoutManager(this, 2)

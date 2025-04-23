@@ -55,22 +55,15 @@ class SneakerAdapter(
                 val sneakerId = sneaker.id.toString()
 
                 if (basketMap.containsKey(sneakerId)) {
-                    // Если товар уже в корзине, удаляем его
                     basketMap.remove(sneakerId)
                 } else {
-                    // Если товара нет в корзине, добавляем его с количеством 1
                     basketMap[sneakerId] = mapOf("quantity" to 1)
                 }
 
-                // Сохраняем обновленную корзину в JSON
                 editor.putString("cart", Gson().toJson(basketMap))
-
-                // Обновляем булево значение
                 editor.putBoolean(sneakerId, basketMap.containsKey(sneakerId))
-
                 editor.apply()
 
-                // Обновляем иконку корзины
                 binding.addToBasket.setImageResource(if (basketMap.containsKey(sneakerId)) R.drawable.frame_1000000821__1_ else R.drawable.frame_1000000821)
             }
         }

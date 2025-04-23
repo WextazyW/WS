@@ -21,7 +21,6 @@ import com.example.ws.databinding.FragmentNotificationBinding
 
 class NotificationFragment : Fragment() {
 
-
     private lateinit var binding: FragmentNotificationBinding
     private lateinit var adapter: NotificationAdapter
     private var listNotifications = mutableListOf<Notification>()
@@ -32,7 +31,6 @@ class NotificationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentNotificationBinding.inflate(inflater, container, false)
-        Toast.makeText(context, "${UserSession.userId}", Toast.LENGTH_SHORT).show()
         adapter = NotificationAdapter(listNotifications)
         binding.rvNotification.layoutManager = LinearLayoutManager(context)
         binding.rvNotification.adapter = adapter

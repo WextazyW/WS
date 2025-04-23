@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.ws.MainActivity
 import com.example.ws.R
 import com.example.ws.databinding.ActivityDetailsBinding
+import com.google.gson.Gson
 
 class DetailsActivity : AppCompatActivity() {
 
@@ -73,10 +74,21 @@ class DetailsActivity : AppCompatActivity() {
 
         binding.btnAddBasket.setOnClickListener {
             val editor = sharedPreferenceBasket.edit()
-            isBasket = !isBasket
-            editor.putBoolean(sneakerId.toString(), isBasket)
-            binding.btnAddBasket.text = if (isBasket) "Убрать из корзины" else "В корзину"
+            val basketJson = sharedPreferenceBasket.getString("cart", "{}")
+            val basketMap = Gson().fromJson(basketJson, Map::class.java) as MutableMap<String, Map<String, Any>>
+
+            if (basketMap.containsKey(sneakerId.toString())) {
+                basketMap.remove(sneakerId.toString())
+            } else {
+                basketMap[sneakerId.toString()] = mapOf("quantity" to 1)
+            }
+
+            editor.putString("cart", Gson().toJson(basketMap))
+            editor.putBoolean(sneakerId.toString(), basketMap.containsKey(sneakerId.toString()))
             editor.apply()
+
+            isBasket = basketMap.containsKey(sneakerId.toString())
+            binding.btnAddBasket.text = if (isBasket) "Убрать из корзины" else "В корзину"
         }
     }
 

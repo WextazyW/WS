@@ -16,11 +16,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.ws.Http.RetrofitInstance
 import com.example.ws.MainActivity
+import com.example.ws.Model.Notification
 import com.example.ws.Model.OrderItem
 import com.example.ws.Model.Orders
 import com.example.ws.Model.Users
 import com.example.ws.R
 import com.example.ws.Singleton.UserSession
+import com.example.ws.ViewModel.NotificationViewModel
 import com.example.ws.databinding.ActivityOrderBinding
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -40,6 +42,7 @@ import ru.yoomoney.sdk.kassa.payments.checkoutParameters.PaymentParameters
 import ru.yoomoney.sdk.kassa.payments.checkoutParameters.SavePaymentMethod
 import java.math.BigDecimal
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.Currency
 import java.util.Locale
 
@@ -241,7 +244,6 @@ class OrderActivity : AppCompatActivity() {
                 val status = jsonResponse.optString("status", "")
                 if (status == "succeeded") {
                     Log.d("PaymentSuccess", "Payment succeeded, creating order...")
-
                     val userId = UserSession.userId
                     if (userId == null) {
                         Log.e("OrderError", "User ID is null")
@@ -249,45 +251,47 @@ class OrderActivity : AppCompatActivity() {
                         return
                     }
 
-                    // Создаем заказ
                     val order = Orders(
-                        id = 0, // ID будет присвоен сервером
+                        id = 0,
                         userId = userId,
-                        orderDate = java.time.LocalDate.now().toString(), // Текущая дата
-                        status = "Pending", // Статус заказа
+                        orderDate = formatDateForDisplay(LocalDate.now()),
+                        status = "Доставлен",
                         deliveryAddress = binding.tvAddress.text.toString().trim(),
                         totalAmount = finalTotal.toFloat()
                     )
 
                     CoroutineScope(Dispatchers.Main).launch {
                         try {
-                            // Отправляем заказ на сервер
                             val createdOrder = RetrofitInstance.orderApi.createOrder(order)
                             val orderId = createdOrder.id
 
-                            // Получаем товары из корзины
                             val basketItems = getBasketItems(this@OrderActivity)
 
-                            // Отправляем каждый товар на сервер
                             for ((sneakerId, quantity) in basketItems) {
                                 val orderItem = OrderItem(
-                                    id = 0, // ID будет присвоен сервером
+                                    id = 0,
                                     orderId = orderId,
                                     sneakerId = sneakerId,
                                     quantity = quantity
                                 )
                                 try {
                                     RetrofitInstance.orderApi.createOrderItem(orderItem)
+                                    val notification = Notification(
+                                        id = 0,
+                                        header = "Успешный заказ",
+                                        body = "Товар #$sneakerId успешно добавлен в заказ #$orderId",
+                                        date = LocalDateTime.now().toString(),
+                                        userId = userId
+                                    )
+                                    createNotification(notification)
                                 } catch (e: Exception) {
                                     Log.e("OrderError", "Failed to create order item for sneakerId=$sneakerId", e)
                                 }
                             }
 
-                            // Очищаем корзину
                             val sharedPreferences = getSharedPreferences("basket", Context.MODE_PRIVATE)
                             sharedPreferences.edit().clear().apply()
 
-                            // Переходим на MainActivity
                             Toast.makeText(this@OrderActivity, "Платеж успешно завершен!", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this@OrderActivity, MainActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
@@ -309,6 +313,21 @@ class OrderActivity : AppCompatActivity() {
         }
     }
 
+    private fun formatDateForDisplay(date: LocalDate): String {
+        val monthNames = listOf(
+            "января", "февраля", "марта", "апреля", "мая", "июня",
+            "июля", "августа", "сентября", "октября", "ноября", "декабря"
+        )
+        val day = date.dayOfMonth
+        val month = monthNames[date.monthValue - 1]
+        return "$day $month"
+    }
+
+    private fun createNotification(notification: Notification) {
+        val notificationViewModel = NotificationViewModel()
+        notificationViewModel.createNotification(notification)
+    }
+
     fun getBasketItems(context: Context): List<Pair<Int, Int>> {
         val sharedPreferenceBasket = context.getSharedPreferences("basket", Context.MODE_PRIVATE)
         val basketJson = sharedPreferenceBasket.getString("cart", "{}")
@@ -316,9 +335,9 @@ class OrderActivity : AppCompatActivity() {
 
         return basketMap.map { (sneakerId, data) ->
             val quantity = when (val q = data["quantity"]) {
-                is Double -> q.toInt() // Преобразуем Double в Int
-                is Int -> q           // Если уже Int, используем его
-                else -> 0             // Если тип неизвестен, используем 0
+                is Double -> q.toInt()
+                is Int -> q
+                else -> 0
             }
             Pair(sneakerId.toInt(), quantity)
         }

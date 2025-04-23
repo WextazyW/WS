@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         updateBasketCounter(basketCount)
 
         drawerLayout = binding.drawerLayout
+        drawerLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
 
         replaceFragment(HomeFragment())
 

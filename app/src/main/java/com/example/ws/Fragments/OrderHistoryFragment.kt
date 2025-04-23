@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ class OrderHistoryFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: OrderAdapter
+    private lateinit var emptyTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +34,8 @@ class OrderHistoryFragment : Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        emptyTextView = view.findViewById(R.id.emptyTextView)
 
         adapter = OrderAdapter(emptyList(), emptyMap(), emptyMap())
         recyclerView.adapter = adapter
@@ -58,8 +62,17 @@ class OrderHistoryFragment : Fragment() {
                     }
                 }
 
+                if (orders.isEmpty()) {
+                    emptyTextView.visibility = View.VISIBLE
+                    recyclerView.visibility = View.GONE
+                } else {
+                    emptyTextView.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                }
+
                 adapter = OrderAdapter(orders, orderItemsMap, sneakersMap)
                 recyclerView.adapter = adapter
+
             } catch (e: Exception) {
                 e.printStackTrace()
                 Toast.makeText(requireContext(), "Ошибка загрузки данных", Toast.LENGTH_SHORT).show()
