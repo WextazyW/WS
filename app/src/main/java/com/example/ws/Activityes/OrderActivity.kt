@@ -52,7 +52,6 @@ class OrderActivity : AppCompatActivity() {
     private var totalPrice: Double = 0.0
     private var deliveryCost: Double = 0.0
     private var finalTotal: Double = 0.0
-    private var paymentAmount: Double = 0.0
     private var tokenAmount: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,6 +98,10 @@ class OrderActivity : AppCompatActivity() {
 
         binding.btnCreateOrder.setOnClickListener {
             startPayment()
+        }
+
+        binding.btnBack.setOnClickListener {
+            finish()
         }
     }
 
@@ -292,7 +295,13 @@ class OrderActivity : AppCompatActivity() {
                             val sharedPreferences = getSharedPreferences("basket", Context.MODE_PRIVATE)
                             sharedPreferences.edit().clear().apply()
 
-                            Toast.makeText(this@OrderActivity, "Платеж успешно завершен!", Toast.LENGTH_SHORT).show()
+                            val inflater = layoutInflater
+                            val customToastLayout = inflater.inflate(R.layout.layout_toast, findViewById(R.id.layoutToastContainer))
+
+                            val customToast = Toast(applicationContext)
+                            customToast.duration = Toast.LENGTH_SHORT
+                            customToast.view = customToastLayout
+                            customToast.show()
                             val intent = Intent(this@OrderActivity, MainActivity::class.java)
                             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                             startActivity(intent)
@@ -337,7 +346,7 @@ class OrderActivity : AppCompatActivity() {
             val quantity = when (val q = data["quantity"]) {
                 is Double -> q.toInt()
                 is Int -> q
-                else -> 0
+                else -> 1
             }
             Pair(sneakerId.toInt(), quantity)
         }

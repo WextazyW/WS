@@ -54,6 +54,7 @@ class AuthViewModel(
             try {
                 val response = authApi.login(email, password)
                 userId = response.id
+                UserSession.userPassword = response.password
                 withContext(Dispatchers.Main) {
                     _loginStatus.value = "Успешный вход"
                     val editor = sharedPreferences.edit()

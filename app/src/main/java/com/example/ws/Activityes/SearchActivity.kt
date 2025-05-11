@@ -24,6 +24,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var adapter: AllSneakersAdapter
     private val viewModel: SneakerViewModel by viewModels()
 
+    private var currentFilterType: Int? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
@@ -33,7 +35,7 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-        window.navigationBarColor = Color.parseColor("#FFFFFF")
+        window.navigationBarColor = Color.parseColor("#F7F7F9")
         window.statusBarColor = Color.parseColor("#F7F7F9")
 
         adapter = AllSneakersAdapter(mutableListOf())
@@ -50,13 +52,23 @@ class SearchActivity : AppCompatActivity() {
         viewModel.loadSneakers()
 
         binding.btnMensShoes.setOnClickListener {
-            filterByType(1)
-            updateButtonStyles(isMenSelected = true)
+            if (currentFilterType == 1) {
+                resetFilter()
+            } else {
+                filterByType(1)
+                updateButtonStyles(isMenSelected = true)
+                currentFilterType = 1
+            }
         }
 
         binding.btnWomenShoes.setOnClickListener {
-            filterByType(2)
-            updateButtonStyles(isMenSelected = false)
+            if (currentFilterType == 2) {
+                resetFilter()
+            } else {
+                filterByType(2)
+                updateButtonStyles(isMenSelected = false)
+                currentFilterType = 2
+            }
         }
 
         binding.etSearch.addTextChangedListener(object : TextWatcher {
@@ -83,17 +95,34 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateButtonStyles(isMenSelected: Boolean) {
-        if (isMenSelected) {
-            binding.btnMensShoes.setBackgroundColor(Color.parseColor("#48B2E7"))
-            binding.btnMensShoes.setTextColor(Color.WHITE)
-            binding.btnWomenShoes.setBackgroundColor(Color.parseColor("#F7F7F9"))
-            binding.btnWomenShoes.setTextColor(Color.GRAY)
-        } else {
-            binding.btnWomenShoes.setBackgroundColor(Color.parseColor("#48B2E7"))
-            binding.btnWomenShoes.setTextColor(Color.WHITE)
-            binding.btnMensShoes.setBackgroundColor(Color.parseColor("#F7F7F9"))
-            binding.btnMensShoes.setTextColor(Color.GRAY)
+    private fun resetFilter() {
+        viewModel.sneakers.value?.let { sneakers ->
+            adapter.updateList(sneakers)
+        }
+        updateButtonStyles(isMenSelected = null)
+        currentFilterType = null
+    }
+
+    private fun updateButtonStyles(isMenSelected: Boolean?) {
+        when (isMenSelected) {
+            true -> {
+                binding.btnMensShoes.setBackgroundColor(Color.parseColor("#48B2E7"))
+                binding.btnMensShoes.setTextColor(Color.WHITE)
+                binding.btnWomenShoes.setBackgroundColor(Color.parseColor("#F7F7F9"))
+                binding.btnWomenShoes.setTextColor(Color.GRAY)
+            }
+            false -> {
+                binding.btnWomenShoes.setBackgroundColor(Color.parseColor("#48B2E7"))
+                binding.btnWomenShoes.setTextColor(Color.WHITE)
+                binding.btnMensShoes.setBackgroundColor(Color.parseColor("#F7F7F9"))
+                binding.btnMensShoes.setTextColor(Color.GRAY)
+            }
+            null -> {
+                binding.btnMensShoes.setBackgroundColor(Color.parseColor("#F7F7F9"))
+                binding.btnMensShoes.setTextColor(Color.GRAY)
+                binding.btnWomenShoes.setBackgroundColor(Color.parseColor("#F7F7F9"))
+                binding.btnWomenShoes.setTextColor(Color.GRAY)
+            }
         }
     }
 

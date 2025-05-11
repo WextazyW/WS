@@ -13,6 +13,8 @@ object UserSession {
         sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
+    var userPassword : String = ""
+
     var userId: Int
         get() = sharedPreferences.getInt(KEY_USER_ID, 0)
         set(value) {

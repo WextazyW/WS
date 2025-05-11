@@ -15,6 +15,7 @@ import com.example.ws.Http.RetrofitInstance
 import com.example.ws.Model.OrderItem
 import com.example.ws.Model.Sneakers
 import com.example.ws.R
+import com.example.ws.Singleton.UserSession
 
 class OrderHistoryFragment : Fragment() {
 
@@ -33,9 +34,8 @@ class OrderHistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
         emptyTextView = view.findViewById(R.id.emptyTextView)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         adapter = OrderAdapter(emptyList(), emptyMap(), emptyMap())
         recyclerView.adapter = adapter
@@ -46,7 +46,11 @@ class OrderHistoryFragment : Fragment() {
     private fun loadOrderHistory() {
         lifecycleScope.launchWhenCreated {
             try {
-                val orders = RetrofitInstance.orderApi.getOrders()
+                val userId = UserSession.userId ?: throw Exception("Пользователь не авторизован")
+
+                // Загружаем только заказы текущего пользователя
+                val orders = RetrofitInstance.orderApi.getOrdersByUserId(userId)
+
                 val orderItemsMap = mutableMapOf<Int, List<OrderItem>>()
                 val sneakersMap = mutableMapOf<Int, Sneakers>()
 
@@ -63,6 +67,7 @@ class OrderHistoryFragment : Fragment() {
                 }
 
                 if (orders.isEmpty()) {
+                    emptyTextView.text = "У вас пока нет заказов"
                     emptyTextView.visibility = View.VISIBLE
                     recyclerView.visibility = View.GONE
                 } else {
@@ -75,7 +80,7 @@ class OrderHistoryFragment : Fragment() {
 
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(requireContext(), "Ошибка загрузки данных", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Ошибка", Toast.LENGTH_SHORT).show()
             }
         }
     }

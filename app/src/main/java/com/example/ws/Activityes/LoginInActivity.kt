@@ -13,7 +13,6 @@ import com.example.ws.Factoryes.SignUpViewModelFactory
 import com.example.ws.Http.RetrofitInstance
 import com.example.ws.MainActivity
 import com.example.ws.R
-import com.example.ws.Singleton.ToastUtil
 import com.example.ws.Singleton.UserSession
 import com.example.ws.ViewModel.AuthViewModel
 import com.example.ws.databinding.ActivityLoginInBinding
@@ -30,6 +29,7 @@ class LoginInActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityLoginInBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -62,16 +62,28 @@ class LoginInActivity : AppCompatActivity() {
         }
 
         binding.signUpBtn.setOnClickListener {
-            val email = binding.etEmail.text.toString()
-            val password = binding.etPassword.text.toString()
+            val email = binding.etEmail.text.toString().trim()
+            val password = binding.etPassword.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty()) {
-                ToastUtil.showIsNotEmptyToast(this)
-                return@setOnClickListener
+            binding.etEmail.error = null
+            binding.etPassword.error = null
+
+            var isValid = true
+
+            if (email.isEmpty()) {
+                binding.etEmail.error = "Введите email"
+                isValid = false
+            } else if (!isValidEmail(email)) {
+                binding.etEmail.error = "Некорректный email"
+                isValid = false
             }
 
-            if (!isValidEmail(email)) {
-                ToastUtil.showIsValidEmailToast(this)
+            if (password.isEmpty()) {
+                binding.etPassword.error = "Введите пароль"
+                isValid = false
+            }
+
+            if (!isValid) {
                 return@setOnClickListener
             }
 
@@ -85,11 +97,11 @@ class LoginInActivity : AppCompatActivity() {
                         UserSession.userId = it
                     }
                 }
-                ToastUtil.showSuccessToast(this)
                 startActivity(Intent(this, SplashActivity::class.java))
                 finish()
             } else {
-                ToastUtil.showFailedToast(this)
+                binding.etEmail.error = "Неверный email или пароль"
+                binding.etPassword.error = "Неверный email или пароль"
             }
         }
     }
@@ -98,13 +110,4 @@ class LoginInActivity : AppCompatActivity() {
         val emailPattern = "^\\S+@\\S+\\.\\S+$".toRegex()
         return emailPattern.matches(email)
     }
-
 }
-
-
-
-
-
-
-
-

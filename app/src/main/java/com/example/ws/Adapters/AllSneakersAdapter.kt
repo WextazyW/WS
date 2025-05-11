@@ -63,16 +63,6 @@ class AllSneakersAdapter(
         }
     }
 
-    private fun updateBasketCounter(context: Context, delta: Int) {
-        val sharedPreferenceBasket = context.getSharedPreferences("basket", Context.MODE_PRIVATE)
-        val currentCount = sharedPreferenceBasket.getInt("basket_count", 0)
-        val newCount = currentCount + delta
-        sharedPreferenceBasket.edit().putInt("basket_count", newCount).apply()
-
-        val activity = context as? MainActivity
-        activity?.updateBasketCounter(newCount)
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int

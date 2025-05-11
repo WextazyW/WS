@@ -1,21 +1,15 @@
 package com.example.ws.Activityes
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ws.Adapters.BasketAdapter
 import com.example.ws.Model.Sneakers
@@ -56,6 +50,11 @@ class BasketActivity : AppCompatActivity() {
         adapter.setupSwipeToDelete(binding.rvBasket)
 
         binding.btnCreateOrder.setOnClickListener {
+            if (listSneakers.isEmpty()) {
+                Toast.makeText(this@BasketActivity, "Корзина пуста", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val intent = Intent(this@BasketActivity, OrderActivity::class.java).apply {
                 putExtra("totalPrice", adapter.getAllPrice())
                 putExtra("deliveryCost", 34.32)

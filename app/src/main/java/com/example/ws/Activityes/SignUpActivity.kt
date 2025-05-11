@@ -2,6 +2,7 @@ package com.example.ws.Activityes
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
@@ -14,7 +15,6 @@ import com.example.ws.Factoryes.SignUpViewModelFactory
 import com.example.ws.Http.RetrofitInstance
 import com.example.ws.Model.Users
 import com.example.ws.R
-import com.example.ws.Singleton.UserSession
 import com.example.ws.ViewModel.AuthViewModel
 import com.example.ws.databinding.ActivitySignUpBinding
 
@@ -36,6 +36,8 @@ class SignUpActivity : AppCompatActivity() {
         binding.checkbox.setOnCheckedChangeListener { _, isChecked ->
             binding.signUpBtn.isEnabled = isChecked
         }
+
+        window.navigationBarColor = Color.parseColor("#FFFFFF")
 
         binding.tvGoSignUp.setOnClickListener {
             startActivity(Intent(this@SignUpActivity, LoginInActivity::class.java))

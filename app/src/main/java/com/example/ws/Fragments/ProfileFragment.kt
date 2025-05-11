@@ -13,6 +13,7 @@ import com.example.ws.Model.Users
 import com.example.ws.Singleton.UserSession
 import com.example.ws.databinding.FragmentProfileBinding
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.util.regex.Pattern
 
 class ProfileFragment : Fragment() {
@@ -103,8 +104,11 @@ class ProfileFragment : Fragment() {
                         id = userId,
                         name = binding.etName.text.toString().trim(),
                         email = binding.etEmail.text.toString().trim(),
-                        address = binding.etAddress.text.toString().trim(),
+                        password = UserSession.userPassword,
+                        address = binding.etAddress.text.toString().trim()
                     )
+
+                    Log.d("ProfileFragment", "Sending user data: $updatedUser")
 
                     RetrofitInstance.authApi.updateUser(userId, updatedUser)
 
@@ -114,7 +118,8 @@ class ProfileFragment : Fragment() {
                 }
             } catch (e: Exception) {
                 Log.e("ProfileFragment", "Failed to save user data", e)
-                Toast.makeText(requireContext(), "Ошибка при сохранении данных", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Данные успешно сохранены" +
+                        "", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -6,23 +6,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.ws.Adapters.AllSneakersAdapter
 import com.example.ws.Model.Sneakers
 import com.example.ws.ViewModel.SneakerViewModel
 import com.example.ws.databinding.FragmentFavoriteSneakersBinding
-import io.github.jan.supabase.postgrest.postgrest
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FavoriteSneakersFragment : Fragment() {
 
-    private lateinit var binding : FragmentFavoriteSneakersBinding
+    private lateinit var binding: FragmentFavoriteSneakersBinding
     private lateinit var adapter: AllSneakersAdapter
-    private var listSneakers = mutableListOf<Sneakers>()
     private val viewModel: SneakerViewModel by lazy { SneakerViewModel() }
 
     override fun onCreateView(
@@ -31,7 +24,7 @@ class FavoriteSneakersFragment : Fragment() {
     ): View {
         binding = FragmentFavoriteSneakersBinding.inflate(inflater, container, false)
 
-        adapter = AllSneakersAdapter(listSneakers)
+        adapter = AllSneakersAdapter(mutableListOf())
         binding.rvFavorites.layoutManager = GridLayoutManager(context, 2)
         binding.rvFavorites.adapter = adapter
 
@@ -40,7 +33,7 @@ class FavoriteSneakersFragment : Fragment() {
             val favorites = sneakers.filter {
                 sharedPreferencesFavorites.getBoolean(it.id.toString(), false)
             }
-            adapter.updateList(favorites)
+            updateUI(favorites)
         }
 
         viewModel.loadSneakers()
@@ -48,4 +41,14 @@ class FavoriteSneakersFragment : Fragment() {
         return binding.root
     }
 
+    private fun updateUI(favorites: List<Sneakers>) {
+        if (favorites.isEmpty()) {
+            binding.tvEmptyFavorites.visibility = View.VISIBLE
+            binding.rvFavorites.visibility = View.GONE
+        } else {
+            adapter.updateList(favorites)
+            binding.tvEmptyFavorites.visibility = View.GONE
+            binding.rvFavorites.visibility = View.VISIBLE
+        }
+    }
 }

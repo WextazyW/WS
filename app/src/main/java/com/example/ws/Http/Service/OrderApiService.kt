@@ -16,6 +16,9 @@ interface OrderApiService {
     @GET("Orderitem/byOrder/{orderId}")
     suspend fun getOrderItemsByOrderId(@Path("orderId") orderId: Int): List<OrderItem>
 
+    @GET("Order/byUser/{userId}")
+    suspend fun getOrdersByUserId(@Path("userId") userId: Int): List<Orders>
+
     @GET("Sneaker/{id}")
     suspend fun getSneakerById(@Path("id") id: Int): Sneakers
 

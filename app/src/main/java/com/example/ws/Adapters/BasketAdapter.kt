@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ws.Model.Sneakers
 import com.example.ws.databinding.ItemSneakerBasketBinding
+import com.google.gson.Gson
 
 class BasketAdapter(
     private val listSneakers: MutableList<Sneakers>,
@@ -50,7 +51,22 @@ class BasketAdapter(
 
             quantities[sneakerId] = newQuantity
             binding.textViewCount.text = newQuantity.toString()
+
             binding.productPrice.text = (newQuantity * listSneakers.find { it.id.toLong() == sneakerId }?.price!!).toString()
+
+            val basketJson = sharedPreferencesBasket.getString("cart", "{}")
+            val gson = Gson()
+            val basketMap = gson.fromJson(basketJson, MutableMap::class.java) as MutableMap<String, Map<String, Any>>
+
+            if (newQuantity > 0) {
+                basketMap[sneakerId.toString()] = mapOf("quantity" to newQuantity)
+            } else {
+                basketMap.remove(sneakerId.toString())
+            }
+
+            val editor = sharedPreferencesBasket.edit()
+            editor.putString("cart", gson.toJson(basketMap))
+            editor.apply()
 
             onPriceChange(getAllPrice())
         }
