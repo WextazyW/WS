@@ -98,7 +98,7 @@ class SignUpActivity : AppCompatActivity() {
                     name = binding.etName.text.toString(),
                     email = binding.etEmail.text.toString(),
                     password = binding.etPassword.text.toString(),
-                    address = binding.etEmail.text.toString()
+                    address = binding.etAddress.text.toString()
                 )
                 authViewModel.registerUser(user)
                 startActivity(Intent(this, LoginInActivity::class.java))

@@ -47,7 +47,7 @@ class BasketAdapter(
         @SuppressLint("SetTextI18n")
         private fun updateQuantity(sneakerId: Long, change: Int) {
             val currentQuantity = getQuantity(sneakerId)
-            val newQuantity = (currentQuantity + change).coerceAtLeast(1)
+            val newQuantity = (currentQuantity + change).coerceIn(1..10)
 
             quantities[sneakerId] = newQuantity
             binding.textViewCount.text = newQuantity.toString()

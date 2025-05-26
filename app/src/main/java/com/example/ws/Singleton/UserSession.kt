@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 object UserSession {
     private const val PREFS_NAME = "user_prefs"
     private const val KEY_USER_ID = "userId"
+    private const val KEY_USER_PASSWORD = "userPassword"
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -13,7 +14,11 @@ object UserSession {
         sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
-    var userPassword : String = ""
+    var userPassword: String
+        get() = sharedPreferences.getString(KEY_USER_PASSWORD, "") ?: ""
+        set(value) {
+            sharedPreferences.edit().putString(KEY_USER_PASSWORD, value).apply()
+        }
 
     var userId: Int
         get() = sharedPreferences.getInt(KEY_USER_ID, 0)

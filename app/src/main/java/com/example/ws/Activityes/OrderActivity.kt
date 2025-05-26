@@ -257,7 +257,7 @@ class OrderActivity : AppCompatActivity() {
                     val order = Orders(
                         id = 0,
                         userId = userId,
-                        orderDate = formatDateForDisplay(LocalDate.now()),
+                        orderDate = "27 мая",
                         status = "Оплачен",
                         deliveryAddress = binding.tvAddress.text.toString().trim(),
                         totalAmount = finalTotal.toFloat()
