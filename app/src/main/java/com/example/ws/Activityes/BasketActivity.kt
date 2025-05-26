@@ -22,6 +22,7 @@ class BasketActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBasketBinding
     private var listSneakers = mutableListOf<Sneakers>()
     private lateinit var adapter: BasketAdapter
+    private var deliveryCost : Double = 0.0
     private val viewModel: SneakerViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,8 +58,8 @@ class BasketActivity : AppCompatActivity() {
 
             val intent = Intent(this@BasketActivity, OrderActivity::class.java).apply {
                 putExtra("totalPrice", adapter.getAllPrice())
-                putExtra("deliveryCost", 34.32)
-                putExtra("finalTotal", adapter.getAllPrice() + 34.32)
+                putExtra("deliveryCost", deliveryCost)
+                putExtra("finalTotal", adapter.getAllPrice() + deliveryCost)
             }
             startActivity(intent)
         }
@@ -74,8 +75,15 @@ class BasketActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n", "DefaultLocale")
     private fun updateTotalPrice(totalPrice: Double) {
         binding.tvSumPrice.text = String.format("%.2f", totalPrice)
-        val deliveryCost = 34.32
-        binding.tvDostavka.text = deliveryCost.toString()
+
+        deliveryCost = when {
+            totalPrice <= 2000 -> 50.00
+            totalPrice > 2000 && totalPrice <= 4000 -> 100.00
+            totalPrice > 4000 -> 200.00
+            else -> 0.0
+        }
+
+        binding.tvDostavka.text = String.format("%.2f", deliveryCost)
         val finalTotal = totalPrice + deliveryCost
         binding.tvItogo.text = String.format("%.2f", finalTotal)
     }

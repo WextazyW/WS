@@ -131,6 +131,16 @@
             android:paddingRight="14dp" />
 
         <TextView
+            android:id="@+id/tvPasswordError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Пароль должен содержать минимум 8 символов, буквы и цифры"
+            android:textColor="@color/red"
+            android:textSize="12sp"
+            android:visibility="gone" />
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -149,11 +159,11 @@
             android:paddingRight="14dp" />
 
         <TextView
-            android:id="@+id/tvPasswordError"
+            android:id="@+id/tvAddressError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Пароль должен содержать минимум 8 символов, буквы и цифры"
+            android:text="Адрес не может быть пустым"
             android:textColor="@color/red"
             android:textSize="12sp"
             android:visibility="gone" />

@@ -68,21 +68,4 @@ class AuthViewModel(
             }
         }
     }
-
-    fun logoutUser() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                withContext(Dispatchers.Main) {
-                    _loginStatus.value = "Выход из аккаунта"
-                    val editor = sharedPreferences.edit()
-                    editor.putBoolean("isLoggedIn", false)
-                    editor.apply()
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    _loginStatus.value = e.message ?: "Ошибка при выходе"
-                }
-            }
-        }
-    }
 }

@@ -258,7 +258,7 @@ class OrderActivity : AppCompatActivity() {
                         id = 0,
                         userId = userId,
                         orderDate = formatDateForDisplay(LocalDate.now()),
-                        status = "Доставлен",
+                        status = "Оплачен",
                         deliveryAddress = binding.tvAddress.text.toString().trim(),
                         totalAmount = finalTotal.toFloat()
                     )

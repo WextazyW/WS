@@ -46,9 +46,8 @@ class OrderHistoryFragment : Fragment() {
     private fun loadOrderHistory() {
         lifecycleScope.launchWhenCreated {
             try {
-                val userId = UserSession.userId ?: throw Exception("Пользователь не авторизован")
+                val userId = UserSession.userId
 
-                // Загружаем только заказы текущего пользователя
                 val orders = RetrofitInstance.orderApi.getOrdersByUserId(userId)
 
                 val orderItemsMap = mutableMapOf<Int, List<OrderItem>>()
@@ -75,7 +74,9 @@ class OrderHistoryFragment : Fragment() {
                     recyclerView.visibility = View.VISIBLE
                 }
 
-                adapter = OrderAdapter(orders, orderItemsMap, sneakersMap)
+                val sortedOrders = orders.sortedByDescending { it.orderDate }
+
+                adapter = OrderAdapter(sortedOrders, orderItemsMap, sneakersMap)
                 recyclerView.adapter = adapter
 
             } catch (e: Exception) {

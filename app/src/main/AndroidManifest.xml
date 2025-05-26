@@ -24,14 +24,19 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Activityes.OrderDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activityes.AllSneakerActivity"
             android:exported="false" />
         <activity
             android:name=".Activityes.SearchActivity"
             android:exported="false" />
+
         <meta-data
             android:name="com.yandex.maps.api_key"
             android:value="96c8c967-78f2-4964-8857-179375bb898f" />
+
         <activity
             android:name=".Activityes.OrderActivity"
             android:exported="false" />

@@ -1,5 +1,6 @@
 package com.example.ws.Model
 
+
 data class Orders(
     val id: Int,
     val userId: Int,
@@ -7,4 +8,4 @@ data class Orders(
     val status: String,
     val deliveryAddress: String?,
     val totalAmount: Float
-)
+): java.io.Serializable

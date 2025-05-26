@@ -49,6 +49,12 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
 
+        binding.etAddress.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                validateAddress()
+            }
+        }
+
         binding.etPassword.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 validatePassword()
@@ -110,8 +116,9 @@ class SignUpActivity : AppCompatActivity() {
         val isNameValid = validateName()
         val isEmailValid = validateEmail()
         val isPasswordValid = validatePassword()
+        val isAddressValid = validateAddress()
 
-        return isNameValid && isEmailValid && isPasswordValid
+        return isNameValid && isEmailValid && isPasswordValid && isAddressValid
     }
 
     private fun validateName(): Boolean {
@@ -121,6 +128,18 @@ class SignUpActivity : AppCompatActivity() {
             false
         } else {
             binding.tvNameError.visibility = View.GONE
+            binding.etName.setBackgroundResource(R.drawable.custom_et)
+            true
+        }
+    }
+
+    private fun validateAddress(): Boolean {
+        val address = binding.etAddress.text.toString()
+        return if (address.isEmpty()) {
+            binding.tvAddressError.visibility = View.VISIBLE
+            false
+        } else {
+            binding.tvAddressError.visibility = View.GONE
             binding.etName.setBackgroundResource(R.drawable.custom_et)
             true
         }
@@ -141,15 +160,24 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun validatePassword(): Boolean {
         val password = binding.etPassword.text.toString()
-        val isValid = password.length >= 8 && password.any { it.isLetter() } && password.any { it.isDigit() }
-        return if (!isValid) {
+
+        if (password.isEmpty()) {
+            binding.tvPasswordError.text = "Пароль не может быть пустым"
             binding.tvPasswordError.visibility = View.VISIBLE
-            false
-        } else {
-            binding.tvPasswordError.visibility = View.GONE
-            binding.etPassword.setBackgroundResource(R.drawable.custom_et)
-            true
+            return false
         }
+
+        val isValid = password.length >= 8 && password.any { it.isLetter() } && password.any { it.isDigit() }
+
+        if (!isValid) {
+            binding.tvPasswordError.text = "Пароль должен содержать минимум 8 символов, буквы и цифры"
+            binding.tvPasswordError.visibility = View.VISIBLE
+            return false
+        }
+
+        binding.tvPasswordError.visibility = View.GONE
+        binding.etPassword.setBackgroundResource(R.drawable.custom_et)
+        return true
     }
 
     private fun isValidEmail(email: String): Boolean {

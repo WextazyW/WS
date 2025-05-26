@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.ws.Activityes.DetailsActivity
-import com.example.ws.MainActivity
 import com.example.ws.Model.Sneakers
 import com.example.ws.R
 import com.example.ws.databinding.ItemSneakerBinding
